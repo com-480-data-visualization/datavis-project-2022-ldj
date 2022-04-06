@@ -2,7 +2,7 @@
 
 | Student's name | SCIPER |
 | -------------- | ------ |
-| Wenjing Dai | .. |
+| Wenjing Dai | 343358 |
 | Yinghui Jiang | .. |
 | Zhinuo Li | 350561 |
 
@@ -54,7 +54,11 @@ Ashok Suthar used the dataset to find the US state's most efficient COVID Vaccin
 
 - Why is your approach original?
 
+  - Our approach aims to combine multiple datasets and extract correlations and insights out of them. Plus, we will build out an interactive platform that allows the users to discover their own findings and opinions from the visualization. There are so many possibilities from our approach and thus it is original. 
 - What source of inspiration do you take? Visualizations that you found on other websites or magazines (might be unrelated to your data).
+  - https://visme.co/blog/best-data-visualizations/
+  - https://informationisbeautiful.net/visualizations/covid-19-coronavirus-infographic-datapack/
+  - https://www.tableau.com/learn/articles/data-visualization-tips
 
 
 
