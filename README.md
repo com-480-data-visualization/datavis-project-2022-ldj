@@ -17,9 +17,7 @@ We chose to visualize two datasets together concerning Coronavirus.
 - [Coronavirus (Covid-19) Data in the United States](https://github.com/nytimes/covid-19-data): the cumulative daily number of cases and deaths reported in each county and state across the United States from January 2020 to April 2022
 - [USA COVID-19 Vaccinations](https://www.kaggle.com/datasets/paultimothymooney/usa-covid19-vaccinations): a recent state-by-state data, covering from December 2020 to April 2022, on COVID-19 vaccinations in the United States.
 
-Since we are combining the two datasets, we need to have the preprocessing step to visualize them better. First, we must eliminate the [Coronavirus (Covid-19) Data](https://github.com/nytimes/covid-19-data) from January 2020 to December 2020 since the [USA COVID-19 Vaccinations](https://www.kaggle.com/datasets/paultimothymooney/usa-covid19-vaccinations) data began in December 2020. Second, both of the founders are updating the datasets every day. We need to determine an end date for our visualization.
-The founders designed the data to be quickly usable, so no data-cleaning is needed.
-
+Since we are combining two datasets, we need to have the preprocessing step to visualize them better. We chose the same time range for two datasets from 2021-01-12 to 2022-04-05. For data cleaning, we only focus on data visualization of Continental United States.
 
 
 ### Problematic 
