@@ -38,6 +38,7 @@ Our targeted audience is people who want to learn more about this pandemic throu
 
 ### Exploratory data analysis
 
+[Data preprocessing and analysis](milestone1.ipynb)
 
 
 ### Related work
