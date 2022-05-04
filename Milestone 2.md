@@ -5,7 +5,23 @@
 ### 1.Interactive Map
 
 ## Extra Visualizations
+
 ## Independent pieces to implement
+- Map visualization overview
+- Line plots of deaths and vaccination 
+- Brushes to filter by date
+- Navigational search (drop-down menu) to select a state
+- Plots for vaccination effectiveness
+- Bar plots for state ranking 
+
 ## Tools
+- D3.js, Leaflet, GeoJson for Interactive world map 
+- D3-brush, D3-zoom for the time slider
+- Chart.js for bar plot
+
 ## Lectures
+First, the whole project relies on lectures on HTML,CSS, Javascript and D3.js to structure the website, as well as lectures on designing visualization and story-telling for the design draft.
+More importantly, lectures on Maps and interaction would be most significant for our core mapping visualizations. We also need lectures on perception colors, marks and channels for specific details.
+
 ## Add-on
+A possible add-on would be a 3d globe projection to plane when loading our core map.
