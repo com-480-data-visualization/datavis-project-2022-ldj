@@ -15,7 +15,7 @@
 - Bar plots for state ranking 
 
 ## Tools
-- D3.js, Leaflet, GeoJson for Interactive world map 
+- D3.js, Leaflet, GeoJson for Interactive map 
 - D3-brush, D3-zoom for the time slider
 - Chart.js for bar plot
 
