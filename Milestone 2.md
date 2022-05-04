@@ -15,9 +15,9 @@
 - Bar plots for state ranking 
 
 ## Tools
-- D3.js, Leaflet, GeoJson for Interactive map 
-- D3-brush, D3-zoom for the time slider
-- Chart.js for bar plot
+- *D3.js*, *Leaflet*, *GeoJson* for Interactive map 
+- *D3-brush*, *D3-zoom* for the time slider
+- *Chart.js* for bar plot
 
 ## Lectures
 First, the whole project relies on lectures on HTML,CSS, Javascript and D3.js to structure the website, as well as lectures on designing visualization and story-telling for the design draft.
