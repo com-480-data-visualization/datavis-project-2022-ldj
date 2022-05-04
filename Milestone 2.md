@@ -5,7 +5,7 @@
 ### 1.Interactive Map
 
 ## Extra Visualizations
-<div align=center>![image](https://github.com/YinghuiJiang/datavis-project-2022-ldj/blob/main/sketches/Vaxed%20vs.%20Unvaxed%20Death.png)
+<div align=center>< img width="150",height="150",src=https://github.com/YinghuiJiang/datavis-project-2022-ldj/blob/main/sketches/Vaxed%20vs.%20Unvaxed%20Death.png>
 ## Independent pieces to implement
 - Map visualization overview
 - Line plots of deaths and vaccination 
