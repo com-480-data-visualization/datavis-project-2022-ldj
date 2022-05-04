@@ -81,7 +81,7 @@
                         var viewboxwidth = width_choropleth * 1;
                         var viewboxheight = height_choropleth - 20;
                 
-                        d3.json("usStates.json", function(json) {
+                        d3.json("./usStates.json", function(json) {
                             var centered;
                             var formatComma = d3.format(',');
                             var fill = d3.scaleLog()
