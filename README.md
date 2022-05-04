@@ -62,6 +62,6 @@ Ashok Suthar used the dataset to find the US state's most efficient COVID Vaccin
 
 
 ## Milestone 2 (Friday 6th May 5pm)
-
+[Website](https://htmlpreview.github.io/?https://github.com/com-480-data-visualization/datavis-project-2022-ldj/blob/main/index.html)
 ## Milestone 3 (Friday 3rd June 5pm) 
 
