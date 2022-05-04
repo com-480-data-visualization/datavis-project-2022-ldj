@@ -1,2 +1,11 @@
-### Project Goal
+## Project Goal
 - The goal of this project is to aggregate certain COVID-19 information in the US into easily understandable visualizations that demonstrate trends and insights. Through exploring our visualizations, the users will directly see the progress of the pandemic in each state and how they compare to each other. Moreover, we also aim to create some visualizations that show the effectiveness of COVID protection measures including vaccination. To achieve this goal, we will break it down into independent pieces to be implemented as follows. 
+
+## Core Visualization
+### 1.Interactive Map
+
+## Extra Visualizations
+## Independent pieces to implement
+## Tools
+## Lectures
+## Add-on
