@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<title>LDJ</title>
+	<meta name="description" content="Exercise 3: Weather">
+
+	<link rel="stylesheet" href="style.css">
+    <!---
+	<link rel="stylesheet" href="style_weather.css">
+    --->
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+</head>
+<body>
+
+    <nav class="navbar background">
+        <ul class="nav-list">
+            <div class="logo">
+                <a href="index.html">LDJ</a>
+            </div>
+            <li><a href="#issue">Issue</a></li>
+            <li><a href="#core-Visualization">Core Visualization</a></li>
+            <li><a href="#additional-Visualization">Additional Visualization</a></li>
+        </ul>
+        
+        <!---
+        <div class="rightNav">
+            <input type="text" name="search" id="search">
+            <button class="btn btn-sm">Search</button>
+        </div>
+        --->
+    </nav>
+
+    <section class="firstsection" id="issue">
+        <div class="box-main">
+            <div class="firstHalf">
+                <h1 class="text-big">
+                    Issue
+                </h1>
+                <br>
+                <p class="text-small">
+                    The goal of this project is to aggregate certain COVID-19 information in the US into easily understandable visualizations that demonstrate trends and insights. 
+                    Through exploring our visualizations, the users will directly see the progress of the pandemic in each state and how they compare to each other. 
+                    Moreover, we also aim to create some visualizations that show the effectiveness of COVID protection measures including vaccination. To achieve this goal, we will break it down into independent pieces to be implemented as follows. 
+                </p>
+            </div>
+        </div>
+    </section>
+ 
+    <section class="secondsection" id="core-Visualization">
+        <div class="box-main">
+            <div class="secondHalf">
+                <h1 class="text-big">
+                    Core Visualization
+                </h1>
+                <br>
+                <p class="text-small">
+                    <div id="usamap"></div>
+                    <script type="text/javascript">
+                        var margin_choropleth = {
+                                top: 10,
+                                left: 10,
+                                bottom: 10,
+                                right: 10
+                            },
+                            width_choropleth = 857,
+                            width_choropleth = width_choropleth - margin_choropleth.left - margin_choropleth.right,
+                            mapRatio = .5,
+                            height_choropleth = width_choropleth * mapRatio;
+                
+                        // D3 Projection
+                        var projection = d3.geoAlbersUsa()
+                            .scale(width_choropleth)
+                            .translate([width_choropleth / 2, height_choropleth / 2]);
+                
+                        // Define path generator
+                        var path = d3.geoPath()
+                            .projection(projection);
+                
+                        var viewboxwidth = width_choropleth * 1;
+                        var viewboxheight = height_choropleth - 20;
+                
+                        d3.json("us-states.json", function(json) {
+                            var centered;
+                            var formatComma = d3.format(',');
+                            var fill = d3.scaleLog()
+                                .domain([10, 500])
+                                .range(["brown", "steelblue"]);
+                
+                            var svg_choropleth = d3.select("#usamap")
+                                .append("svg")
+                                .attr("preserveAspectRatio", "xMidYMid meet")
+                                .attr("viewBox", "0 0 " + viewboxwidth + " " + viewboxheight + "");
+                
+                            var map = svg_choropleth.append("g")
+                                .attr("id", "states")
+                                .selectAll("path")
+                                .data(json.features)
+                                .enter()
+                                .append("path")
+                                .attr("d", path)
+                                .style("stroke", "#fff")
+                                .style("stroke-width", "0.1")
+                                .style("fill", function(d) {
+                                    return fill(path.area(d));
+                                })
+                                .on("click", clicked);
+                
+                            svg_choropleth.append("g")
+                                .attr("class", "states-names")
+                                .selectAll("text")
+                                .data(json.features)
+                                .enter()
+                                .append("svg:text")
+                                .text(function(d) {
+                                    return d.properties.name;
+                                })
+                                .attr("x", function(d) {
+                                    return path.centroid(d)[0];
+                                })
+                                .attr("y", function(d) {
+                                    return path.centroid(d)[1];
+                                })
+                                .attr("text-anchor", "middle")
+                                .attr("fill", "white");
+                
+                
+                            function clicked(d) {
+                
+                                var x, y, k;
+                
+                                if (d && centered !== d) {
+                                    var centroid = path.centroid(d);
+                                    x = centroid[0];
+                                    y = centroid[1];
+                                    k = 4;
+                                    centered = d;
+                
+                                } else {
+                                    x = viewboxwidth / 2;
+                                    y = viewboxheight / 2;
+                                    k = 1;
+                                    centered = null;
+                                }
+                
+                                map.selectAll('path')
+                                    .classed('active', centered && function(d) {
+                                        return d === centered;
+                                    });
+                
+                                map.transition()
+                                    .duration(750)
+                                    .attr('transform', 'translate(' + viewboxwidth / 2 + ',' + viewboxheight / 2 + ')scale(' + k + ')translate(' + -x + ',' + -y + ')');
+                
+                                svg_choropleth.selectAll('text')
+                                    .transition()
+                                    .duration(750)
+                                    .attr('transform', 'translate(' + viewboxwidth / 2 + ',' + viewboxheight / 2 + ')scale(' + k + ')translate(' + -x + ',' + -y + ')');
+                            }
+                        });
+                    </script>
+                    <br>
+                    <img src="img/initial.png">
+                </p>
+ 
+ 
+            </div>
+        </div>
+    </section>
+ 
+    <section class="thirdsection" id="additional-Visualization">
+        <div class="box-main">
+            <div class="secondHalf">
+                <h1 class="sectionTag text-big" id="additional-Visualization">
+                    Additional Virtual
+                </h1>
+                <br>
+                <p class="sectionSubTag text-small">
+                    Effectiveness of vaccines
+                    <img src="img/Vaxedvs.UnvaxedDeath.png">
+                    <br><br>
+                    State level ranking of death and vaccination per day
+                    <img src="img/rank.png">
+                </p>
+ 
+            </div>
+        </div>
+    </section>
+ 
+    <footer class="background">
+        <p class="text-footer">
+            Copyright ©-All rights are reserved
+        </p>
+ 
+ 
+    </footer>
+</body>
+ <!--the name of the sections need to be changed-->>
+</html>
