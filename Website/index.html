@@ -83,7 +83,7 @@
                         var viewboxwidth = width_choropleth * 1;
                         var viewboxheight = height_choropleth - 20;
                 
-                        d3.json("us-states.json", function(json) {
+                        d3.json("https://gist.githubusercontent.com/michellechandra/0b2ce4923dc9b5809922/raw/a476b9098ba0244718b496697c5b350460d32f99/us-states.json", function(json) {
                             var centered;
                             var formatComma = d3.format(',');
                             var fill = d3.scaleLog()
