@@ -3,6 +3,7 @@
 
 <head>
 	<meta charset="utf-8">
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 	<title>LDJ</title>
@@ -80,7 +81,7 @@
                         var viewboxwidth = width_choropleth * 1;
                         var viewboxheight = height_choropleth - 20;
                 
-                        d3.json("usStates.json", function(json) {
+                        d3.json("./usStates.json", function(json) {
                             var centered;
                             var formatComma = d3.format(',');
                             var fill = d3.scaleLog()
