@@ -3,7 +3,11 @@
 
 ## Core Visualization
 ### 1.Interactive Map
-![image](https://github.com/YinghuiJiang/datavis-project-2022-ldj/blob/main/sketches/initial.png)![image](https://github.com/YinghuiJiang/datavis-project-2022-ldj/blob/main/sketches/selectAState.png)
+<p float="left">
+  <img src="https://github.com/YinghuiJiang/datavis-project-2022-ldj/blob/main/sketches/initial.png" width="100" />
+  <img src="/https://github.com/YinghuiJiang/datavis-project-2022-ldj/blob/main/sketches/selectAState.png" width="100" /> 
+</p>
+![image]()![image]()
 
 
 ## Extra Visualizations
