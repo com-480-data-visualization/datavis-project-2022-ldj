@@ -4,8 +4,8 @@
 ## Core Visualization
 ### 1.Interactive Map
 <p float="left">
-  <img src="https://github.com/YinghuiJiang/datavis-project-2022-ldj/blob/main/sketches/initial.png" width="200" />
-  <img src="https://github.com/YinghuiJiang/datavis-project-2022-ldj/blob/main/sketches/selectAState.png" width=“200" /> 
+  <img src="https://github.com/YinghuiJiang/datavis-project-2022-ldj/blob/main/sketches/initial.png" width="180" />
+  <img src="https://github.com/YinghuiJiang/datavis-project-2022-ldj/blob/main/sketches/selectAState.png" width=“180" /> 
 </p>
 
 
