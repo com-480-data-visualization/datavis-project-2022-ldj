@@ -13,7 +13,7 @@
 - The user can take a closer look at each state by clicking on that state or using navigational search on the top. In this case, the two line graphs will become the trend of death and vaccination of that specific state. In this case, the map will only highlight the chosen state. Again, the user is free to change the time range and see the graphs in a broader or narrower view.
 
 ## Extra Visualizations
-### 2. 
+### 2. Linked Plots
 <p align="center">
   <img alt="Light" src="https://github.com/YinghuiJiang/datavis-project-2022-ldj/blob/main/sketches/Vaxed%20vs.%20Unvaxed%20Death.png" width="60%">
 </p>
@@ -45,4 +45,6 @@ First, the whole project relies on lectures on HTML,CSS, Javascript and D3.js to
 More importantly, lectures on Maps and interaction would be most significant for our core mapping visualizations. We also need lectures on perception colors, marks and channels for specific details.
 
 ## Add-on
-A possible add-on would be a 3d globe projection to plane when loading our core map.
+- A possible add-on would be a 3d globe projection to plane when loading our core map.
+- We may also add some animations for interation on website for users to explore.
+
