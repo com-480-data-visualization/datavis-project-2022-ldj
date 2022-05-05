@@ -3,15 +3,30 @@
 
 ## Core Visualization
 ### 1.Interactive Map
-<p float="left">
-  <img src="https://github.com/YinghuiJiang/datavis-project-2022-ldj/blob/main/sketches/initial.png" width="100" />
-  <img src="https://github.com/YinghuiJiang/datavis-project-2022-ldj/blob/main/sketches/selectAState.png" width=“100" /> 
+<p align="center">
+  <img alt="Light" src="https://github.com/YinghuiJiang/datavis-project-2022-ldj/blob/main/sketches/initial.png"  width="45%">
+&nbsp; &nbsp; &nbsp; &nbsp;
+  <img alt="Dark" src="https://github.com/YinghuiJiang/datavis-project-2022-ldj/blob/main/sketches/selectAState.png" width="45%">
 </p>
 
-
+- For the core visualization, we will include a US state map and two line graphs. In its initial form, the map displays the relative amount of either the new deaths or vaccination among each state within a period of time, represented by an intuitive color scale(e.g. red for death and green for vaccination). The two line graphs show the trend of total death and vaccination of the US within the same time period. The users can freely adjust the time slider at the bottom to see how the COVID data changes with respect to time, as the map would dynamically change color and the line graphs would update its time range. 
+- The user can take a closer look at each state by clicking on that state or using navigational search on the top. In this case, the two line graphs will become the trend of death and vaccination of that specific state. In this case, the map will only highlight the chosen state. Again, the user is free to change the time range and see the graphs in a broader or narrower view.
 
 ## Extra Visualizations
-![image](https://github.com/YinghuiJiang/datavis-project-2022-ldj/blob/main/sketches/Vaxed%20vs.%20Unvaxed%20Death.png)
+### 2. 
+<p align="center">
+  <img alt="Light" src="https://github.com/YinghuiJiang/datavis-project-2022-ldj/blob/main/sketches/Vaxed%20vs.%20Unvaxed%20Death.png" width="60%">
+</p>
+
+- This visualization aims to show the effectiveness of vaccines. Specifically, the line graph on the right shows the death trend in the US categorized by vaccination status. Through adjusting the time slider, the user can directly visualize the differences between each category in the left bar graph, which showcases the percentage of each category in the total death at a specific time.
+
+### 3.Ranking Bar Plot 
+<p align="center">
+  <img alt="Light" src="https://github.com/YinghuiJiang/datavis-project-2022-ldj/blob/main/sketches/statesranking.PNG" width="60%">
+</p>
+                                                                                                                   
+- This visualization demonstrates the state level ranking of death and vaccination per day.The left would be death ranking and the right part would be vaccination ranking. Through adjusting the time slider, the user can directly explore daily ranking.
+
 ## Independent pieces to implement
 - Map visualization overview
 - Line plots of deaths and vaccination 
