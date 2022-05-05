@@ -3,6 +3,7 @@
 
 ## Core Visualization
 ### 1.Interactive Map
+![image](https://github.com/YinghuiJiang/datavis-project-2022-ldj/blob/main/sketches/initial.png)
 
 ## Extra Visualizations
 ![image](https://github.com/YinghuiJiang/datavis-project-2022-ldj/blob/main/sketches/Vaxed%20vs.%20Unvaxed%20Death.png)
