@@ -58,6 +58,7 @@
     width: 30%;
     text-align: right;
 }
+
 /*
 #search {
     padding: 5px;
@@ -140,6 +141,7 @@
 .section-Left {
     flex-direction: row-reverse;
 }
+
 /*
 .paras {
     padding: 0px 65px;
@@ -163,4 +165,32 @@
     display: flex;
     justify-content: center;
     color: white;
+}
+
+.line {
+    stroke-width: 1.5;
+    fill: none
+}
+
+#unvaxed_line {
+    stroke: rgb(188, 33, 33);
+}
+
+#primary_series_only_line {
+    stroke: steelblue;
+}
+
+#boosted_line {
+    stroke: rgb(0, 102, 29);
+}
+
+.area {
+    fill: steelblue;
+    clip-path: url(#clip);
+}
+
+.zoom {
+    cursor: move;
+    fill: none;
+    pointer-events: all;
 }
