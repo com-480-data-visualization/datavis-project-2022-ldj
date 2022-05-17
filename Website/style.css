@@ -169,7 +169,8 @@
 
 .line {
     stroke-width: 1.5;
-    fill: none
+    fill: none;
+    clip-path: url(#clip);
 }
 
 #unvaxed_line {
@@ -184,10 +185,6 @@
     stroke: rgb(0, 102, 29);
 }
 
-.area {
-    fill: steelblue;
-    clip-path: url(#clip);
-}
 
 .zoom {
     cursor: move;
