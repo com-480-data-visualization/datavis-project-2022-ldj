@@ -67,7 +67,7 @@ var bottom_graph = svg.append("g")
     .attr("class", "bottom_graph")
     .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
 
-d3.csv("/data/Rates_of_COVID-19_Cases_or_Deaths_by_Age_Group_and_Vaccination_Status_and_Booster_Dose.csv", conversion, function (error, data) {
+d3.csv("../data/Rates_of_COVID-19_Cases_or_Deaths_by_Age_Group_and_Vaccination_Status_and_Booster_Dose.csv", conversion, function (error, data) {
     if (error) throw error;
 
     x.domain(d3.extent(data, function (d) { return d.mmwr_week; }));
