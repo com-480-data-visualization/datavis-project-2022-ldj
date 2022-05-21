@@ -79,7 +79,7 @@
 
 .thirdsection {
     background-color: rgb(192, 221, 198);
-    height: 1400px;
+    height: 2700px;
 }
 
 .box-main {
@@ -101,16 +101,21 @@
 
 .secondhalf {
     width: 30%;
+    flex-direction: column;
+    justify-content: center;
+    display: flex;
 }
 
 .text-big {
     font-family: 'Piazzolla', serif;
     font-weight: bold;
     font-size: 35px;
+    text-align: center;
 }
 
 .text-small {
     font-size: 18px;
+    text-align: center;
 }
 
 /*
