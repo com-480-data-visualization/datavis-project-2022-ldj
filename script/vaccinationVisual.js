@@ -1,6 +1,7 @@
 // TODO: d3.annotation, title, style
 
-var svg = d3.select("#vaccination"),
+// code for the line graph
+var svg = d3.select("#vaccination_line"),
     margin = { top: 20, right: 20, bottom: 110, left: 40 },
     margin2 = { top: 430, right: 20, bottom: 30, left: 40 },
     width = +svg.attr("width") - margin.left - margin.right,
@@ -30,28 +31,28 @@ var zoom = d3.zoom()
 
 // lines for the graph
 var line_unvaxed_top = d3.line()
-    .x(function (d) { return x(d.mmwr_week); })
-    .y(function (d) { return y(d.unvaccinated_with_outcome); });
+    .x(d => x(d.mmwr_week))
+    .y(d => y(d.unvaccinated_with_outcome));
 
 var line_unvaxed_bottom = d3.line()
-    .x(function (d) { return x_bot(d.mmwr_week); })
-    .y(function (d) { return y_bot(d.unvaccinated_with_outcome); });
+    .x(d => x_bot(d.mmwr_week))
+    .y(d => y_bot(d.unvaccinated_with_outcome));
 
 var line_primary_series_only_top = d3.line()
-    .x(function (d) { return x(d.mmwr_week); })
-    .y(function (d) { return y(d.primary_series_only_with_outcome); });
+    .x(d => x(d.mmwr_week))
+    .y(d => y(d.primary_series_only_with_outcome));
 
 var line_primary_series_only_bottom = d3.line()
-    .x(function (d) { return x_bot(d.mmwr_week); })
-    .y(function (d) { return y_bot(d.primary_series_only_with_outcome); });
+    .x(d => x_bot(d.mmwr_week))
+    .y(d => y_bot(d.primary_series_only_with_outcome));
 
 var line_boosted_top = d3.line()
-    .x(function (d) { return x(d.mmwr_week); })
-    .y(function (d) { return y(d.boosted_with_outcome); });
+    .x(d => x(d.mmwr_week))
+    .y(d => y(d.boosted_with_outcome));
 
 var line_boosted_bottom = d3.line()
-    .x(function (d) { return x_bot(d.mmwr_week); })
-    .y(function (d) { return y_bot(d.boosted_with_outcome); });
+    .x(d => x_bot(d.mmwr_week))
+    .y(d => y_bot(d.boosted_with_outcome));
 
 svg.append("defs").append("clipPath")
     .attr("id", "clip")
@@ -67,16 +68,27 @@ var bottom_graph = svg.append("g")
     .attr("class", "bottom_graph")
     .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
 
+// for calculating the total death in the bar graph
+var total_unvaxed_death = 0,
+    total_no_booster_death = 0,
+    total_boosted_death = 0;
+
 d3.csv("../data/Rates_of_COVID-19_Cases_or_Deaths_by_Age_Group_and_Vaccination_Status_and_Booster_Dose.csv", conversion, function (error, data) {
     if (error) throw error;
-
-    x.domain(d3.extent(data, function (d) { return d.mmwr_week; }));
-    y.domain([0, d3.max(data, function (d) { return d.unvaccinated_with_outcome; })]);
+    x.domain(d3.extent(data, d => d.mmwr_week));
+    y.domain([0, d3.max(data, d => d.unvaccinated_with_outcome)]);
     x_bot.domain(x.domain());
     y_bot.domain(y.domain());
 
     // filter out unwanted rows
     data = data.filter(datum => (datum.age_group === "all_ages" && datum.vaccine_product === "all_types"));
+
+    // this is for data in the bar graph
+    data.forEach(datum => {
+        total_unvaxed_death += datum.unvaccinated_with_outcome;
+        total_no_booster_death += datum.primary_series_only_with_outcome;
+        total_boosted_death += datum.boosted_with_outcome;
+    });
 
     // get the data for different vaccination status
     const unvaccinated_data = data.map(datum => ({ mmwr_week: datum.mmwr_week, unvaccinated_with_outcome: datum.unvaccinated_with_outcome }));
@@ -131,7 +143,62 @@ d3.csv("../data/Rates_of_COVID-19_Cases_or_Deaths_by_Age_Group_and_Vaccination_S
         .attr("height", height)
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
         .call(zoom);
+
+
+    // code for the bar graph
+    var categories = ["Unvaccinated", "Fully vaccinated, no booster", "Fully vaccinated + booster"];
+
+    var total_death = total_unvaxed_death + total_no_booster_death + total_boosted_death;
+    // calculate percentage
+    var data_bar_arr = [total_unvaxed_death / total_death, total_no_booster_death / total_death, total_boosted_death / total_death];
+    var data_bar = categories.map((c, i) => {
+        return {
+            category: c,
+            death: data_bar_arr[i]
+        }
+    });
+
+    var svg_bar = d3.select("#vaccination_bar"),
+        x_bar = d3.scaleBand().range([0, width]).domain(categories).padding(0.5),
+        y_bar = d3.scaleLinear().domain([0, 1]).range([height, 0]);
+
+    var bar_graph = svg_bar.append("g")
+        .attr("class", "bar_graph")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    bar_graph.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .attr("class", "axis axis--x")
+        .call(d3.axisBottom(x_bar))
+        .selectAll("text")
+        .style("text-anchor", "middle");
+
+    bar_graph.append("g")
+        .attr("class", "axis axis--y")
+        .call(d3.axisLeft(y_bar).tickFormat(d3.format(".0%")));
+
+    // Draw the bars
+    bar_graph.selectAll("bars")
+        .data(data_bar)
+        .enter()
+        .append("rect")
+        .attr("x", d => x_bar(d.category))
+        .attr("width", x_bar.bandwidth())
+        .attr("fill", "#69b3a2")
+        // no bar at the beginning thus:
+        .attr("height", d => height - y_bar(0)) // always equal to 0
+        .attr("y", d => y_bar(0))
+
+    // Animation
+    bar_graph.selectAll("rect")
+        .transition()
+        .duration(800)
+        .attr("y", d => y_bar(d.death))
+        .attr("height", d => height - y_bar(d.death))
+        .delay((d, i) => i * 100)
+
 });
+
 
 function brushed() {
     if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom") return; // ignore brush-by-zoom
@@ -161,5 +228,7 @@ function zoomed() {
 function conversion(d) {
     d.mmwr_week = parseDate(d.mmwr_week);
     d.unvaccinated_with_outcome = +d.unvaccinated_with_outcome;
+    d.primary_series_only_with_outcome = +d.primary_series_only_with_outcome;
+    d.boosted_with_outcome = +d.boosted_with_outcome;
     return d;
 }
