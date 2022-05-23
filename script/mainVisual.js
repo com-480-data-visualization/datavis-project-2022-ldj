@@ -1,7 +1,171 @@
-function mainVisual() {
+// Map for all
+function MapAll() {
+    var margin_choropleth = {
+        top: 10,
+        left: 10,
+        bottom: 10,
+        right: 10
+    },
+        width_choropleth = 857,
+        width_choropleth = width_choropleth - margin_choropleth.left - margin_choropleth.right,
+        mapRatio = .5,
+        height_choropleth = width_choropleth * mapRatio;
+
+    // D3 Projection
+    var projection = d3.geoAlbersUsa()
+        .scale(width_choropleth)
+        .translate([width_choropleth / 2, height_choropleth / 2]);
+
+    // Define path generator
+    var path = d3.geoPath()
+        .projection(projection);
+
+    var viewboxwidth = width_choropleth * 1;
+    var viewboxheight = height_choropleth - 20;
+    
+    // Load us shape AND number of deaths/vacc
+    d3.queue()
+    .defer(d3.json, "./usStates.json")  // US shape
+    .defer(d3.csv, "../folder/subfolder/out.csv") // Deaths and Vacc
+    .await(ready);
+
+    function ready(error, dataGeo, data) {
+        if (error) throw error;
+
+        var centered;
+        
+        // Parse data
+        data = data.filter(d => d.date === "2022-04-05");
+        console.log(data)
+
+        // colors for deaths
+        var colorForDeath = d3.scaleLinear()
+                        .domain([
+                            d3.min(data, function(d) {return +d.deaths}),
+                            d3.max(data, function(d) {return +d.deaths})
+                        ])
+                        .range(['#eeeeee','#f26161','#f03939','#ea0909','#9a0707']);
+        // colors for vacc
+        var colorForVacc = d3.scaleLinear()
+                        .domain([
+                            d3.min(data, function(d) {return +d.total_vaccinations}),
+                            d3.max(data, function(d) {return +d.total_vaccinations})
+                        ])
+                        .range(['#eefdec','#719b25','#2e6409','#2c4928','#192819']);
+
+        var svg_choropleth = d3.select("#usamap")
+            .append("svg")
+            .attr("preserveAspectRatio", "xMidYMid meet")
+            .attr("viewBox", "0 0 " + viewboxwidth + " " + viewboxheight + "");
+
+        var map = svg_choropleth.append("g")
+            .attr("id", "states")
+            .selectAll("path")
+            .data(dataGeo.features)
+            .enter()
+            .append("path")
+            .attr("d", path)
+            .style("stroke", "#fff")
+            .style("stroke-width", "0.1")
+            .style("fill", function(d) {
+                const s = data.find(s => s.state === d.properties.name);
+                if (s == null)
+                    return;
+                return colorForDeath(s.deaths);
+            })
+            .on("click", clicked);
+
+        svg_choropleth.append("g")
+            .attr("class", "states-names")
+            .selectAll("text")
+            .data(dataGeo.features)
+            .enter()
+            .append("svg:text")
+            .text(function (d) {
+                return d.short.name;
+            })
+            .attr("x", function (d) {
+                return path.centroid(d)[0];
+            })
+            .attr("y", function (d) {
+                return path.centroid(d)[1];
+            })
+            .attr("text-anchor", "middle")
+            .attr("fill", "grey");
+
+
+        function clicked(d) {
+
+            var x, y, k;
+
+            if (d && centered !== d) {
+                var centroid = path.centroid(d);
+                x = centroid[0];
+                y = centroid[1];
+                k = 4;
+                centered = d;
+
+            } else {
+                x = viewboxwidth / 2;
+                y = viewboxheight / 2;
+                k = 1;
+                centered = null;
+            }
+
+            map.selectAll('path')
+                .classed('active', centered && function (d) {
+                    return d === centered;
+                });
+
+            map.transition()
+                .duration(750)
+                .attr('transform', 'translate(' + viewboxwidth / 2 + ',' + viewboxheight / 2 + ')scale(' + k + ')translate(' + -x + ',' + -y + ')');
+
+            svg_choropleth.selectAll('text')
+                .transition()
+                .duration(750)
+                .attr('transform', 'translate(' + viewboxwidth / 2 + ',' + viewboxheight / 2 + ')scale(' + k + ')translate(' + -x + ',' + -y + ')');
+        }
+
+        function deathClick() {
+            d3.selectAll("path")
+              .data(dataGeo.features)
+              .transition()
+              .duration(2000)
+              .style("fill", function(d) {
+                const s = data.find(s => s.state === d.properties.name);
+                if (s == null)
+                    return "white";
+                console.log(s)
+                return colorForDeath(s.deaths);
+            })
+        }
+
+        function vaccClick() {
+            d3.selectAll("path")
+              .data(dataGeo.features)
+              .transition()
+              .duration(2000)
+              .style("fill", function(d) {
+                const s = data.find(s => s.state === d.properties.name);
+                if (s == null)
+                    return "white";
+                    console.log(s)
+                return colorForVacc(s.total_vaccinations);
+            })
+        }
+
+        document.getElementById('deathButton').onclick = function() {deathClick()};
+        document.getElementById('vaccButton').onclick = function() {vaccClick()};
+    };
+}
+MapAll();
+
+// Line graph for Deaths
+function LineForDeath() {
     var svg = d3.select("svg"),
-        margin = {top: 20, right: 20, bottom: 110, left: 50},
-        margin2 = {top: 430, right: 20, bottom: 30, left: 50},
+        margin = {top: 20, right: 20, bottom: 110, left: 70},
+        margin2 = {top: 430, right: 20, bottom: 30, left: 70},
         width = +svg.attr("width") - margin.left - margin.right,
         height = +svg.attr("height") - margin.top - margin.bottom,
         height2 = +svg.attr("height") - margin2.top - margin2.bottom;
@@ -119,14 +283,14 @@ function mainVisual() {
         // Add axis labels
         svg.append("text")             
         .attr("transform",
-                "translate(" + (width/2) + " ," + 
-                                (height + margin.top + 150) + ")")
+                "translate(" + (width/2 + 50) + " ," + 
+                                (height + margin.top + 40) + ")")
         .style("text-anchor", "middle")
         .text("Date");
 
         svg.append("text")
         .attr("transform", "rotate(-90)")
-        .attr("y", 0 - margin.left)
+        .attr("y", 0 - margin.left + 70)
         .attr("x",0 - (height / 2))
         .attr("dy", "1em")
         .style("text-anchor", "middle")
@@ -159,4 +323,4 @@ function mainVisual() {
         return d;
     }
 }
-mainVisual();
+LineForDeath();
