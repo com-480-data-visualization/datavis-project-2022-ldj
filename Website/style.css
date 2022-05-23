@@ -74,12 +74,12 @@
 
 .secondsection {
     background-color: rgb(243, 239, 212);
-    height: 1000px;
+    height: 2000px;
 }
 
 .thirdsection {
     background-color: rgb(192, 221, 198);
-    height: 1400px;
+    height: 2400px;
 }
 
 .box-main {
@@ -171,6 +171,18 @@
     stroke-width: 1.5;
     fill: none;
     clip-path: url(#clip);
+}
+
+.mainLine {
+    stroke-width: 1.5;
+    fill: none;
+    stroke: rgb(188, 33, 33);
+}
+
+.zoom {
+    cursor: move;
+    fill: none;
+    pointer-events: all;
 }
 
 #unvaxed_line {

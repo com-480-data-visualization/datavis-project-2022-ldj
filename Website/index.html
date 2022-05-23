@@ -117,7 +117,7 @@
                             .enter()
                             .append("svg:text")
                             .text(function (d) {
-                                return d.properties.name;
+                                return d.short.name;
                             })
                             .attr("x", function (d) {
                                 return path.centroid(d)[0];
@@ -166,8 +166,9 @@
                 <br>
                 <img src="img/initial.png">
                 </p>
-
-
+                <svg id="svg" width="750" height="500">
+                </svg>
+                <script src="../script/mainVisual.js"></script>
             </div>
         </div>
     </section>
