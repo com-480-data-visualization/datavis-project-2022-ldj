@@ -1,5 +1,9 @@
+// import {Runtime} from "https://cdn.jsdelivr.net/npm/@observablehq/runtime@4/dist/runtime.js";
+// import d3_colorLegend from "https://api.observablehq.com/@d3/color-legend.js?v=3";
+// import {Legend} from "@d3/color-legend"
+
 // Map for all
-function MapAll() {
+function MapAll() {    
     var margin_choropleth = {
         top: 10,
         left: 10,
@@ -36,23 +40,23 @@ function MapAll() {
         
         // Parse data
         data = data.filter(d => d.date === "2022-04-05");
-        console.log(data)
 
         // colors for deaths
+        var dmin = d3.min(data, function(d) {return +d.deaths});
+        var dmax = d3.max(data, function(d) {return +d.deaths});
+        var dmid = (dmin + dmax)/2;
         var colorForDeath = d3.scaleLinear()
-                        .domain([
-                            d3.min(data, function(d) {return +d.deaths}),
-                            d3.max(data, function(d) {return +d.deaths})
-                        ])
+                        .domain([dmin, (dmin + dmid)/2, dmid, (dmid + dmax)/2, dmax])
+                        // .range(['#eeeeee','#9a0707']);
                         .range(['#eeeeee','#f26161','#f03939','#ea0909','#9a0707']);
         // colors for vacc
+        var vmin = d3.min(data, function(d) {return +d.total_vaccinations});
+        var vmax = d3.max(data, function(d) {return +d.total_vaccinations});
+        var vmid = (vmin + vmax)/2;
         var colorForVacc = d3.scaleLinear()
-                        .domain([
-                            d3.min(data, function(d) {return +d.total_vaccinations}),
-                            d3.max(data, function(d) {return +d.total_vaccinations})
-                        ])
+                        .domain([vmin, (vmin + vmid)/2, vmid, (vmid + vmax)/2, vmax])
                         .range(['#eefdec','#719b25','#2e6409','#2c4928','#192819']);
-
+      
         var svg_choropleth = d3.select("#usamap")
             .append("svg")
             .attr("preserveAspectRatio", "xMidYMid meet")
@@ -74,6 +78,9 @@ function MapAll() {
                 return colorForDeath(s.deaths);
             })
             .on("click", clicked);
+
+        // initial color label for death
+        labelColor(colorForDeath);
 
         svg_choropleth.append("g")
             .attr("class", "states-names")
@@ -127,30 +134,55 @@ function MapAll() {
                 .attr('transform', 'translate(' + viewboxwidth / 2 + ',' + viewboxheight / 2 + ')scale(' + k + ')translate(' + -x + ',' + -y + ')');
         }
 
+        // Display the labels for the color on map
+        function labelColor(info) {
+            // if there is alreay labels there, delete them
+            const elements = document.getElementsByClassName("legend");
+            while(elements.length > 0){
+                elements[0].parentNode.removeChild(elements[0]);
+            }
+
+            var colorLegend = legend()
+                .units("Deaths")
+                .cellWidth(50)
+                .cellHeight(15)
+                .inputScale(info)
+                .cellStepping(50)
+                .orientation("vertical");
+
+            svg_choropleth.append("g")
+                .attr("transform", "translate(0,20)").attr("class", "legend")
+                .call(colorLegend);
+        }
+
         function deathClick() {
+            // Update color label
+            labelColor(colorForDeath);
+
             d3.selectAll("path")
               .data(dataGeo.features)
               .transition()
-              .duration(2000)
+              .duration(1000)
               .style("fill", function(d) {
                 const s = data.find(s => s.state === d.properties.name);
                 if (s == null)
                     return "white";
-                console.log(s)
                 return colorForDeath(s.deaths);
             })
         }
 
         function vaccClick() {
+            // Update color label
+            labelColor(colorForVacc);
+        
             d3.selectAll("path")
               .data(dataGeo.features)
               .transition()
-              .duration(2000)
+              .duration(1000)
               .style("fill", function(d) {
                 const s = data.find(s => s.state === d.properties.name);
                 if (s == null)
                     return "white";
-                    console.log(s)
                 return colorForVacc(s.total_vaccinations);
             })
         }
