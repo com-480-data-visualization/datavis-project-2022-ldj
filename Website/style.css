@@ -173,7 +173,7 @@
 }
 
 .line {
-    stroke-width: 1.5;
+    stroke-width: 2.5;
     fill: none;
     clip-path: url(#clip);
 }
@@ -207,4 +207,16 @@
     cursor: move;
     fill: none;
     pointer-events: all;
+}
+
+#vaccination_bar > g > rect:first-of-type {
+    fill: rgb(188, 33, 33);
+}
+
+#vaccination_bar > g > rect:nth-of-type(2) {
+    fill: steelblue;
+}
+
+#vaccination_bar > g > rect:nth-of-type(3) {
+    fill: rgb(0, 102, 29);
 }

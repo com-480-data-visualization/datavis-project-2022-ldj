@@ -1,7 +1,9 @@
-// TODO: d3.annotation, title, style
+// TODO: d3.annotation, title, style, dots on data points, percentage on bar
 
-function vaccinationVisual() {
-    // code for the line graph
+async function vaccinationVisual() {
+
+    // ********************** CODE FOR LINE GRAPH **********************************
+
     var svg = d3.select("#vaccination_line"),
         margin = { top: 20, right: 20, bottom: 110, left: 40 },
         margin2 = { top: 430, right: 20, bottom: 30, left: 40 },
@@ -9,10 +11,18 @@ function vaccinationVisual() {
         height = +svg.attr("height") - margin.top - margin.bottom,
         height2 = +svg.attr("height") - margin2.top - margin2.bottom;
 
+    // categories for the bar graph
+    var categories = ["Unvaccinated", "Fully vaccinated, no booster", "Fully vaccinated + booster"];
+
+    // scales for the graphs
     var x = d3.scaleTime().range([0, width]),
         x_bot = d3.scaleTime().range([0, width]),
         y = d3.scaleLinear().range([height, 0]),
-        y_bot = d3.scaleLinear().range([height2, 0]);
+        y_bot = d3.scaleLinear().range([height2, 0]),
+        x_bar = d3.scaleBand().range([0, width]).domain(categories).padding(0.5),
+        y_bar = d3.scaleLinear().domain([0, 1]).range([height, 0]);
+
+    var data_global;
 
     var parseDate = d3.timeParse("%Y%V");
 
@@ -74,7 +84,7 @@ function vaccinationVisual() {
         total_no_booster_death = 0,
         total_boosted_death = 0;
 
-    d3.csv("../data/Rates_of_COVID-19_Cases_or_Deaths_by_Age_Group_and_Vaccination_Status_and_Booster_Dose.csv", conversion, function (error, data) {
+    await d3.csv("../data/Rates_of_COVID-19_Cases_or_Deaths_by_Age_Group_and_Vaccination_Status_and_Booster_Dose.csv", conversion, function (error, data) {
         if (error) throw error;
         x.domain(d3.extent(data, d => d.mmwr_week));
         y.domain([0, d3.max(data, d => d.unvaccinated_with_outcome)]);
@@ -83,6 +93,8 @@ function vaccinationVisual() {
 
         // filter out unwanted rows
         data = data.filter(datum => (datum.age_group === "all_ages" && datum.vaccine_product === "all_types"));
+
+        data_global = data;
 
         // this is for data in the bar graph
         data.forEach(datum => {
@@ -146,8 +158,9 @@ function vaccinationVisual() {
             .call(zoom);
 
 
-        // code for the bar graph
-        var categories = ["Unvaccinated", "Fully vaccinated, no booster", "Fully vaccinated + booster"];
+
+
+        // ********************** CODE FOR BAR GRAPH **********************************
 
         var total_death = total_unvaxed_death + total_no_booster_death + total_boosted_death;
         // calculate percentage
@@ -159,9 +172,7 @@ function vaccinationVisual() {
             }
         });
 
-        var svg_bar = d3.select("#vaccination_bar"),
-            x_bar = d3.scaleBand().range([0, width]).domain(categories).padding(0.5),
-            y_bar = d3.scaleLinear().domain([0, 1]).range([height, 0]);
+        var svg_bar = d3.select("#vaccination_bar");
 
         var bar_graph = svg_bar.append("g")
             .attr("class", "bar_graph")
@@ -223,8 +234,45 @@ function vaccinationVisual() {
         top_graph.select("#boosted_line").attr("d", line_boosted_top);
         top_graph.select(".axis--x").call(xAxis);
         bottom_graph.select(".brush").call(brush.move, x.range().map(t.invertX, t));
+        redrawBar();
     }
 
+    function redrawBar() {
+        const domain = x.domain();
+        // only need data within the domain to calculate total data
+        filtered_data = data_global.filter(d => d.mmwr_week >= domain[0] && d.mmwr_week <= domain[1]);
+        if (filtered_data.length) {
+            total_unvaxed_death = 0;
+            total_no_booster_death = 0;
+            total_boosted_death = 0;
+            filtered_data.forEach(datum => {
+                total_unvaxed_death += datum.unvaccinated_with_outcome;
+                total_no_booster_death += datum.primary_series_only_with_outcome;
+                total_boosted_death += datum.boosted_with_outcome;
+            });
+
+            // do calculations of percentages just like above
+            var total_death = total_unvaxed_death + total_no_booster_death + total_boosted_death;
+            var categories = ["Unvaccinated", "Fully vaccinated, no booster", "Fully vaccinated + booster"];
+            var data_bar_arr = [total_unvaxed_death / total_death, total_no_booster_death / total_death, total_boosted_death / total_death];
+            var data_bar = categories.map((c, i) => {
+                return {
+                    category: c,
+                    death: data_bar_arr[i]
+                }
+            });
+
+            var bar_graph = d3.select("#vaccination_bar .bar_graph");
+
+            // Animation
+            bar_graph.selectAll("rect")
+                .data(data_bar)
+                .transition()
+                .duration(100)
+                .attr("y", d => y_bar(d.death))
+                .attr("height", d => height - y_bar(d.death));
+        }
+    }
 
     function conversion(d) {
         d.mmwr_week = parseDate(d.mmwr_week);
