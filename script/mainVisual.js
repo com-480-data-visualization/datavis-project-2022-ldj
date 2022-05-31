@@ -28,26 +28,37 @@ function MapAll() {
     d3.queue()
     .defer(d3.json, "./usStates.json")  // US shape
     .defer(d3.csv, "../folder/subfolder/out.csv") // Deaths and Vacc
+    .defer(d3.csv, "../data/2019_Census_US_Population_Data_By_State_Lat_Long.csv")
     .await(ready);
 
-    function ready(error, dataGeo, data) {
+    function ready(error, dataGeo, data, population) {
         if (error) throw error;
-
         var centered;
         // Parse data
         var dataMap =  structuredClone(data);
         dataMap = dataMap.filter(d => d.date === "2022-04-05");
 
-        // colors for deaths
-        var dmin = d3.min(dataMap, function(d) {return +d.deaths});
-        var dmax = d3.max(dataMap, function(d) {return +d.deaths});
+        // calculate the death per 10,0000 people using population data for each state
+        var ratio = population.map(d => ({
+            state: d.STATE,
+            ratio: +d.POPESTIMATE2019 / 100000.0
+        }));
+
+        function computeRatio(d) {
+            return ratio.find(e => e.state === d.state).ratio;
+        }
+
+        console.log(dataMap);
+        // colors for deaths per 10,0000 people
+        var dmin = d3.min(dataMap, function(d) {return +d.deaths / computeRatio(d)});
+        var dmax = d3.max(dataMap, function(d) {return +d.deaths / computeRatio(d)});
         var dmid = (dmin + dmax)/2;
         var colorForDeath = d3.scaleLinear()
                         .domain([dmin, (dmin + dmid)/2, dmid, (dmid + dmax)/2, dmax])
                         .range(['#eeeeee','#f26161','#f03939','#ea0909','#9a0707']);
         // colors for vacc
-        var vmin = d3.min(dataMap, function(d) {return +d.total_vaccinations});
-        var vmax = d3.max(dataMap, function(d) {return +d.total_vaccinations});
+        var vmin = d3.min(dataMap, function(d) {return +d.total_vaccinations / computeRatio(d)});
+        var vmax = d3.max(dataMap, function(d) {return +d.total_vaccinations / computeRatio(d)});
         var vmid = (vmin + vmax)/2;
         var colorForVacc = d3.scaleLinear()
                         .domain([vmin, (vmin + vmid)/2, vmid, (vmid + vmax)/2, vmax])
@@ -71,7 +82,7 @@ function MapAll() {
                 const s = dataMap.find(s => s.state === d.properties.name);
                 if (s == null)
                     return;
-                return colorForDeath(s.deaths);
+                return colorForDeath(+s.deaths / computeRatio(s));
             })
             .on("click", clicked);
 
@@ -141,7 +152,7 @@ function MapAll() {
             }
 
             var colorLegend = legend()
-                .units("Deaths")
+                .units((info == colorForDeath)? "Deaths(per 100,000 people)": "Vaccination(per 100,000 people)")
                 .cellWidth(30)
                 .cellHeight(10)
                 .inputScale(info)
@@ -166,7 +177,7 @@ function MapAll() {
                 const s = dataMap.find(s => s.state === d.properties.name);
                 if (s == null)
                     return "white";
-                return colorForDeath(s.deaths);
+                return colorForDeath(s.deaths / computeRatio(s));
             })
         }
 
@@ -182,7 +193,7 @@ function MapAll() {
                 const s = dataMap.find(s => s.state === d.properties.name);
                 if (s == null)
                     return "white";
-                return colorForVacc(s.total_vaccinations);
+                return colorForVacc(s.total_vaccinations / computeRatio(s));
             })
         }
 
@@ -478,7 +489,6 @@ function LineForVacc() {
             d.total_vaccinations = d.value;
         });
 
-        console.log(data)
         x.domain(d3.extent(data, function(d) { return d.date; }));
         y.domain([0, d3.max(data, function (d) { return d.total_vaccinations; })]);
         x2.domain(x.domain());
