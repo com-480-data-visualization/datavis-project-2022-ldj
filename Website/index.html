@@ -9,7 +9,7 @@
     <title>LDJ</title>
 
     <link rel="stylesheet" href="style.css">
-    
+
     <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/d3-legend/1.1.0/d3-legend.js"></script>
     <script src="https://d3js.org/colorbrewer.v1.min.js"></script>
@@ -64,52 +64,49 @@
                 
                 <br><br>
                 <p>
-                    <!-- &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; -->
                 <button id="deathButton" onclick="deathClick()">Show Deaths</button>
                 <button id="vaccButton" onclick="vaccClick()">Show Vaccination</button>
                 </h1></p>
-                <!-- <div> -->
-                    <svg class="center" id="usamap" width="750" height="500"></svg>
-                    <div>
-                        <svg id="deaths-line" width="500" height="230"></svg>
-                        <svg id="vacc-line" width="500" height="230"></svg>
-                    </div>
-                <!-- </div> -->
-                <!-- <svg id="svg" width="750" height="500"></svg> -->
-                <!-- </p> -->
+                <svg class="center" id="usamap" width="750" height="500"></svg>
+                <div>
+                    <svg id="deaths-line" width="500" height="230"></svg>
+                    <svg id="vacc-line" width="500" height="230"></svg>
+                </div>
             </div>
         </div>
     </section>
 
     <section class="thirdsection" id="additional-Visualization">
-        <div class="box-main">
-            <div class="secondHalf">
-                <h1 class="text-big" id="additional-Visualization">
-                    Additional Visual
-                </h1>
-                <br>
-                <p class="text-small">
-                    Effectiveness of vaccines<br>
-                <img src="img/Vaxedvs.UnvaxedDeath.png">
-                <svg id="vaccination_line" width="960" height="500">
-                </svg>
-                <svg id="vaccination_bar" width="960" height="500"></svg>
-                <script src="../script/vaccinationVisual.js"></script>
-                <br><br>
-                State level ranking of deaths <br>
-                <button>Stop</button>
-                <svg id="bar-chart-race">
-                  <g class="chart-container">
+        <h1 class="text-big" id="additional-Visualization">
+            Additional Visual
+        </h1>
+        <br>
+        <div id="vaccination_visual">
+            <div id="left_graph">
+                <p class="graph_title">
+                    Weekly Death By Vaccination Status<br></p>
+                <svg id="vaccination_line"></svg>
+            </div>
+            <div id="right_graph">
+                <p class="graph_title">
+                    Percentage of Death By Vaccination Status<br></p>
+                <svg id="vaccination_bar"></svg>
+            </div>
+            <script src="../script/vaccinationVisual.js"></script>
+            <br><br>
+        </div>
+        <div> State level ranking of deaths <br>
+            <button>Stop</button>
+            <svg id="bar-chart-race">
+                <g class="chart-container">
                     <text class="chart-title"></text>
                     <g class="x-axis"></g>
                     <g class="y-axis"></g>
                     <g class="columns"></g>
                     <text class="current-date"></text>
-                  </g>
-                </svg>
-                <script src="../script/BarChartrace.js"></script>
-                </p>
-            </div>
+                </g>
+            </svg>
+            <script src="../script/BarChartrace.js"></script>
         </div>
     </section>
 
