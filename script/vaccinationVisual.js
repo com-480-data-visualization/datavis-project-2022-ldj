@@ -1,10 +1,10 @@
-// TODO: d3.annotation, title, style, dots on data points, percentage on bar
+// TODO: 
 
 async function vaccinationVisual() {
 
     // ********************** CODE FOR LINE GRAPH **********************************
 
-    var svg = d3.select("#vaccination_line"),
+    var svg = d3.select("#vaccination_line").attr("width", 800).attr("height", 500),
         margin = { top: 20, right: 20, bottom: 110, left: 40 },
         margin2 = { top: 430, right: 20, bottom: 30, left: 40 },
         width = +svg.attr("width") - margin.left - margin.right,
@@ -79,6 +79,41 @@ async function vaccinationVisual() {
         .attr("class", "bottom_graph")
         .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
 
+    // draw the legend
+    const legend_x = 30, legend_y = 10, line_width = 25, legend_height = 15;
+    top_graph.append("line")
+        .attr("class", "line")
+        .attr("stroke", "rgb(188, 33, 33)")
+        .attr("x1", legend_x)
+        .attr("y1", legend_y)
+        .attr("x2", legend_x + line_width)
+        .attr("y2", legend_y);
+
+    top_graph.append("line")
+        .attr("class", "line")
+        .attr("stroke", "steelblue")
+        .attr("x1", legend_x)
+        .attr("y1", legend_y + legend_height)
+        .attr("x2", legend_x + line_width)
+        .attr("y2", legend_y + legend_height);
+
+    top_graph.append("line")
+        .attr("class", "line")
+        .attr("stroke", "rgb(0, 102, 29)")
+        .attr("x1", legend_x)
+        .attr("y1", legend_y + 2 * legend_height)
+        .attr("x2", legend_x + line_width)
+        .attr("y2", legend_y + 2 * legend_height);
+
+    categories.forEach((category, i) => {
+        top_graph.append("text")
+        .attr("x", legend_x + line_width + 5)
+        .attr("y", legend_y + legend_height * i)
+        .text(category)
+        .style("font-size", "16px")
+        .attr("alignment-baseline", "middle");
+    });
+
     // for calculating the total death in the bar graph
     var total_unvaxed_death = 0,
         total_no_booster_death = 0,
@@ -125,11 +160,11 @@ async function vaccinationVisual() {
 
         // draw x and y axis of top
         top_graph.append("g")
-            .attr("class", "axis axis--x")
+            .attr("class", "vaccination_axis--x")
             .attr("transform", "translate(0," + height + ")")
             .call(xAxis);
         top_graph.append("g")
-            .attr("class", "axis axis--y")
+            .attr("class", "vaccination_axis--y")
             .call(yAxis);
 
         // draw the paths in the bottom graph
@@ -142,7 +177,7 @@ async function vaccinationVisual() {
 
         // draw x and y axis of bottom
         bottom_graph.append("g")
-            .attr("class", "axis axis--x")
+            .attr("class", "vaccination_axis--x")
             .attr("transform", "translate(0," + height2 + ")")
             .call(xAxis2);
         bottom_graph.append("g")
@@ -172,7 +207,7 @@ async function vaccinationVisual() {
             }
         });
 
-        var svg_bar = d3.select("#vaccination_bar");
+        var svg_bar = d3.select("#vaccination_bar").attr("width", 800).attr("height", 500);
 
         var bar_graph = svg_bar.append("g")
             .attr("class", "bar_graph")
@@ -180,16 +215,16 @@ async function vaccinationVisual() {
 
         bar_graph.append("g")
             .attr("transform", "translate(0," + height + ")")
-            .attr("class", "axis axis--x")
+            .attr("class", "vaccination_axis--x")
             .call(d3.axisBottom(x_bar))
             .selectAll("text")
             .style("text-anchor", "middle");
 
         bar_graph.append("g")
-            .attr("class", "axis axis--y")
+            .attr("class", "vaccination_axis--y")
             .call(d3.axisLeft(y_bar).tickFormat(d3.format(".0%")));
 
-        // Draw the bars
+        // draw the bars
         bar_graph.selectAll("bars")
             .data(data_bar)
             .enter()
@@ -201,13 +236,15 @@ async function vaccinationVisual() {
             .attr("height", d => height - y_bar(0)) // always equal to 0
             .attr("y", d => y_bar(0))
 
-        // Animation
+        // animation
         bar_graph.selectAll("rect")
             .transition()
             .duration(800)
             .attr("y", d => y_bar(d.death))
             .attr("height", d => height - y_bar(d.death))
             .delay((d, i) => i * 100)
+        
+        // numbers
 
     });
 
@@ -219,7 +256,7 @@ async function vaccinationVisual() {
         top_graph.select("#unvaxed_line").attr("d", line_unvaxed_top);
         top_graph.select("#primary_series_only_line").attr("d", line_primary_series_only_top);
         top_graph.select("#boosted_line").attr("d", line_boosted_top);
-        top_graph.select(".axis--x").call(xAxis);
+        top_graph.select(".vaccination_axis--x").call(xAxis);
         svg.select(".zoom").call(zoom.transform, d3.zoomIdentity
             .scale(width / (s[1] - s[0]))
             .translate(-s[0], 0));
@@ -232,7 +269,7 @@ async function vaccinationVisual() {
         top_graph.select("#unvaxed_line").attr("d", line_unvaxed_top);
         top_graph.select("#primary_series_only_line").attr("d", line_primary_series_only_top);
         top_graph.select("#boosted_line").attr("d", line_boosted_top);
-        top_graph.select(".axis--x").call(xAxis);
+        top_graph.select(".vaccination_axis--x").call(xAxis);
         bottom_graph.select(".brush").call(brush.move, x.range().map(t.invertX, t));
         redrawBar();
     }
