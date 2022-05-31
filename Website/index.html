@@ -15,6 +15,7 @@
     <script src="https://d3js.org/colorbrewer.v1.min.js"></script>
     <script src="../script/legend.js"></script>
     <script src="d3.v4.min.js"></script>
+    <script type="module" src="../script/mainVisual.js"></script>
 </head>
 
 <body>
@@ -60,18 +61,22 @@
             <div class="secondHalf">
                 <h1 class="text-big">
                     Core Visualization
-                </h1>
-                <br>
-                <p class="text-small">
+                
+                <br><br>
+                <p>
+                    <!-- &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; -->
                 <button id="deathButton" onclick="deathClick()">Show Deaths</button>
                 <button id="vaccButton" onclick="vaccClick()">Show Vaccination</button>
-                <div id="usamap"></div>
-                <br>
-                <img src="img/initial.png">
-                </p>
-                <svg id="svg" width="750" height="500">
-                </svg>
-                <script type="module" src="../script/mainVisual.js"></script>
+                </h1></p>
+                <!-- <div> -->
+                    <svg class="center" id="usamap" width="750" height="500"></svg>
+                    <div>
+                        <svg id="deaths-line" width="500" height="230"></svg>
+                        <svg id="vacc-line" width="500" height="230"></svg>
+                    </div>
+                <!-- </div> -->
+                <!-- <svg id="svg" width="750" height="500"></svg> -->
+                <!-- </p> -->
             </div>
         </div>
     </section>
