@@ -5,6 +5,7 @@ async function vaccinationVisual() {
     // ********************** CODE FOR LINE GRAPH **********************************
 
     const div_width = document.getElementById("vaccination_left_graph").offsetWidth;
+    console.log("div_width is: " + div_width);
     var svg = d3.select("#vaccination_line").attr("width", div_width).attr("height", 500),
         margin = { top: 20, right: 20, bottom: 110, left: 40 },
         margin2 = { top: 420, right: 20, bottom: 30, left: 40 },
