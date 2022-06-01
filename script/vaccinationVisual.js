@@ -1,6 +1,5 @@
-// TODO: 
 
-async function vaccinationVisual() {
+function vaccinationVisual() {
 
     // ********************** CODE FOR LINE GRAPH **********************************
 
@@ -121,7 +120,7 @@ async function vaccinationVisual() {
         total_no_booster_death = 0,
         total_boosted_death = 0;
 
-    await d3.csv("../data/Rates_of_COVID-19_Cases_or_Deaths_by_Age_Group_and_Vaccination_Status_and_Booster_Dose.csv", conversion, function (error, data) {
+    d3.csv("../data/Rates_of_COVID-19_Cases_or_Deaths_by_Age_Group_and_Vaccination_Status_and_Booster_Dose.csv", conversion, function (error, data) {
         if (error) throw error;
         x.domain(d3.extent(data, d => d.mmwr_week));
         y.domain([0, d3.max(data, d => d.unvaccinated_with_outcome)]);
@@ -322,4 +321,4 @@ async function vaccinationVisual() {
     }
 }
 
-vaccinationVisual();
+setTimeout(vaccinationVisual, 5000);
