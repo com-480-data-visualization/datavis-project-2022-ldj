@@ -1,4 +1,4 @@
-function MapAll() {    
+function MapAll() {
     var animationTime = 800;
 
     var margin_choropleth = {
@@ -23,40 +23,55 @@ function MapAll() {
 
     var viewboxwidth = width_choropleth * 1;
     var viewboxheight = height_choropleth - 20;
-    
+
+
     // Load us shape AND number of deaths/vacc
     d3.queue()
-    .defer(d3.json, "./usStates.json")  // US shape
-    .defer(d3.csv, "../folder/subfolder/out.csv") // Deaths and Vacc
-    .await(ready);
+        .defer(d3.json, "./usStates.json")  // US shape
+        .defer(d3.csv, "../folder/subfolder/out.csv") // Deaths and Vacc
+        .defer(d3.csv, "../data/2019_Census_US_Population_Data_By_State_Lat_Long.csv")
+        .await(ready);
 
-    function ready(error, dataGeo, data) {
+    function ready(error, dataGeo, data, population) {
         if (error) throw error;
-
         var centered;
         // Parse data
-        var dataMap =  structuredClone(data);
+        var dataMap = structuredClone(data);
         dataMap = dataMap.filter(d => d.date === "2022-04-05");
 
-        // colors for deaths
-        var dmin = d3.min(dataMap, function(d) {return +d.deaths});
-        var dmax = d3.max(dataMap, function(d) {return +d.deaths});
-        var dmid = (dmin + dmax)/2;
+        // calculate the death per 10,0000 people using population data for each state
+        var ratio = population.map(d => ({
+            state: d.STATE,
+            ratio: +d.POPESTIMATE2019 / 100000.0
+        }));
+
+        function computeRatio(d) {
+            return ratio.find(e => e.state === d.state).ratio;
+        }
+
+        console.log(dataMap);
+        // colors for deaths per 10,0000 people
+        var dmin = d3.min(dataMap, function (d) { return +d.deaths / computeRatio(d) });
+        var dmax = d3.max(dataMap, function (d) { return +d.deaths / computeRatio(d) });
+        var dmid = (dmin + dmax) / 2;
         var colorForDeath = d3.scaleLinear()
-                        .domain([dmin, (dmin + dmid)/2, dmid, (dmid + dmax)/2, dmax])
-                        .range(['#eeeeee','#f26161','#f03939','#ea0909','#9a0707']);
+            .domain([dmin, (dmin + dmid) / 2, dmid, (dmid + dmax) / 2, dmax])
+            .range(['#eeeeee', '#f26161', '#f03939', '#ea0909', '#9a0707']);
         // colors for vacc
-        var vmin = d3.min(dataMap, function(d) {return +d.total_vaccinations});
-        var vmax = d3.max(dataMap, function(d) {return +d.total_vaccinations});
-        var vmid = (vmin + vmax)/2;
+        var vmin = d3.min(dataMap, function (d) { return +d.total_vaccinations / computeRatio(d) });
+        var vmax = d3.max(dataMap, function (d) { return +d.total_vaccinations / computeRatio(d) });
+        var vmid = (vmin + vmax) / 2;
         var colorForVacc = d3.scaleLinear()
-                        .domain([vmin, (vmin + vmid)/2, vmid, (vmid + vmax)/2, vmax])
-                        .range(['#eefdec','#719b25','#2e6409','#2c4928','#192819']);
-      
+            .domain([vmin, (vmin + vmid) / 2, vmid, (vmid + vmax) / 2, vmax])
+            .range(['#eefdec', '#719b25', '#2e6409', '#2c4928', '#192819']);
+
+        const div_width = document.getElementById("main_visual_div").offsetWidth;
         var svg_choropleth = d3.select("#usamap")
+            .attr("width", div_width)
+            .attr("height", 450)
             .append("svg")
             .attr("preserveAspectRatio", "xMidYMid meet")
-            .attr("viewBox", "0 0 " + viewboxwidth + " " + viewboxheight + "");
+            .attr("viewBox", "0 0 " + viewboxwidth + " " + viewboxheight * 1.2 + "");
 
         var map = svg_choropleth.append("g")
             .attr("id", "states")
@@ -67,11 +82,11 @@ function MapAll() {
             .attr("d", path)
             .style("stroke", "#fff")
             .style("stroke-width", "0.1")
-            .style("fill", function(d) {
+            .style("fill", function (d) {
                 const s = dataMap.find(s => s.state === d.properties.name);
                 if (s == null)
                     return;
-                return colorForDeath(s.deaths);
+                return colorForDeath(+s.deaths / computeRatio(s));
             })
             .on("click", clicked);
 
@@ -128,7 +143,7 @@ function MapAll() {
                 .transition()
                 .duration(animationTime)
                 .attr('transform', 'translate(' + viewboxwidth / 2 + ',' + viewboxheight / 2 + ')scale(' + k + ')translate(' + -x + ',' + -y + ')');
-            
+
             updateDeathLine(d, data, centered);
         }
 
@@ -136,12 +151,12 @@ function MapAll() {
         function labelColor(info) {
             // if there is alreay labels there, delete them
             const elements = document.getElementsByClassName("legend");
-            while(elements.length > 0){
+            while (elements.length > 0) {
                 elements[0].parentNode.removeChild(elements[0]);
             }
 
             var colorLegend = legend()
-                .units("Deaths")
+                .units((info == colorForDeath) ? "Deaths(per 100,000 people)" : "Vaccination(per 100,000 people)")
                 .cellWidth(30)
                 .cellHeight(10)
                 .inputScale(info)
@@ -159,42 +174,43 @@ function MapAll() {
             labelColor(colorForDeath);
 
             d3.selectAll("path")
-              .data(dataGeo.features)
-              .transition()
-              .duration(animationTime)
-              .style("fill", function(d) {
-                const s = dataMap.find(s => s.state === d.properties.name);
-                if (s == null)
-                    return "white";
-                return colorForDeath(s.deaths);
-            })
+                .data(dataGeo.features)
+                .transition()
+                .duration(animationTime)
+                .style("fill", function (d) {
+                    const s = dataMap.find(s => s.state === d.properties.name);
+                    if (s == null)
+                        return "white";
+                    return colorForDeath(s.deaths / computeRatio(s));
+                })
         }
 
         function vaccClick() {
             // Update color label
             labelColor(colorForVacc);
-        
+
             d3.selectAll("path")
-              .data(dataGeo.features)
-              .transition()
-              .duration(animationTime)
-              .style("fill", function(d) {
-                const s = dataMap.find(s => s.state === d.properties.name);
-                if (s == null)
-                    return "white";
-                return colorForVacc(s.total_vaccinations);
-            })
+                .data(dataGeo.features)
+                .transition()
+                .duration(animationTime)
+                .style("fill", function (d) {
+                    const s = dataMap.find(s => s.state === d.properties.name);
+                    if (s == null)
+                        return "white";
+                    return colorForVacc(s.total_vaccinations / computeRatio(s));
+                })
         }
 
-        document.getElementById('deathButton').onclick = function() {deathClick()};
-        document.getElementById('vaccButton').onclick = function() {vaccClick()};
+        document.getElementById('deathButton').onclick = function () { deathClick() };
+        document.getElementById('vaccButton').onclick = function () { vaccClick() };
     };
 
-    // Line graphs
-    var svg = d3.select("#deaths-line"),
-        svgVacc = d3.select("#vacc-line"),
-        margin = {top: 0, right: 20, bottom: 110, left: 70},
-        margin2 = {top: 150, right: 20, bottom: 30, left: 70},
+    // Line graph for Deaths
+    const div_width = document.getElementById("main_left_graph").offsetWidth;
+    var svg = d3.select("#deaths-line").attr("width", div_width).attr("height", 350),
+        svgVacc = d3.select("#vacc-line").attr("width", div_width).attr("height", 350),
+        margin = { top: 0, right: 20, bottom: 110, left: 70 },
+        margin2 = { top: 270, right: 20, bottom: 30, left: 70 },
         width = +svg.attr("width") - margin.left - margin.right,
         height = +svg.attr("height") - margin.top - margin.bottom,
         height2 = +svg.attr("height") - margin2.top - margin2.bottom;
@@ -274,14 +290,14 @@ function MapAll() {
 
     function parseDataForAllDeath(data) {
         var dataDeath = d3.nest()
-                        .key(function(f) { return f.date;})
-                        .rollup(function(f) { 
-                            return d3.sum(f, function(g) {return g.deaths; });
-                        })
-                        .entries(data);
+            .key(function (f) { return f.date; })
+            .rollup(function (f) {
+                return d3.sum(f, function (g) { return g.deaths; });
+            })
+            .entries(data);
 
         // re-name because name changed from nest function
-        dataDeath.forEach(function(d) {
+        dataDeath.forEach(function (d) {
             d.date = d.key;
             //covert date to Object since keys are Strings in d3
             d.date = new Date(d.date);
@@ -318,7 +334,7 @@ function MapAll() {
         var dataDeath = structuredClone(data);
         dataDeath = parseDataForAllDeath(dataDeath);
 
-        x.domain(d3.extent(dataDeath, function(d) { return d.date; }));
+        x.domain(d3.extent(dataDeath, function (d) { return d.date; }));
         y.domain([0, d3.max(dataDeath, function (d) { return d.deaths; })]);
         x2.domain(x.domain());
         y2.domain(y.domain());
@@ -364,20 +380,20 @@ function MapAll() {
             .call(zoom);
 
         // Axis labels
-        svg.append("text")             
-        .attr("transform",
-                "translate(" + (width/2 + 70) + " ," + 
-                                (height + margin.top + 40) + ")")
-        .style("text-anchor", "middle")
-        .text("Time");
+        svg.append("text")
+            .attr("transform",
+                "translate(" + (width / 2 + 70) + " ," +
+                (height + margin.top + 40) + ")")
+            .style("text-anchor", "middle")
+            .text("Time");
 
         svg.append("text")
-        .attr("transform", "rotate(-90)")
-        .attr("y", 0 - margin.left + 70)
-        .attr("x",0 - (height / 2))
-        .attr("dy", "1em")
-        .style("text-anchor", "middle")
-        .text("Deaths"); 
+            .attr("transform", "rotate(-90)")
+            .attr("y", 0 - margin.left + 70)
+            .attr("x", 0 - (height / 2))
+            .attr("dy", "1em")
+            .style("text-anchor", "middle")
+            .text("Deaths");
 
     });
 
@@ -506,17 +522,18 @@ function MapAll() {
         var updateDataDeath = structuredClone(data);
 
         if (centered != null) {
-            updateDataDeath = updateDataDeath.filter(function(f) {
-                return f.state === d.properties.name;});
-            updateDataDeath.forEach(function(d) {
+            updateDataDeath = updateDataDeath.filter(function (f) {
+                return f.state === d.properties.name;
+            });
+            updateDataDeath.forEach(function (d) {
                 type(d);
             })
-            
+
         } else {
             updateDataDeath = parseDataForAllDeath(updateDataDeath);
         }
 
-        x.domain(d3.extent(updateDataDeath, function(d) { return d.date; }));
+        x.domain(d3.extent(updateDataDeath, function (d) { return d.date; }));
         y.domain([0, d3.max(updateDataDeath, function (d) { return d.deaths; })]);
         x2.domain(x.domain());
         y2.domain(y.domain());
@@ -537,7 +554,7 @@ function MapAll() {
             .transition()
             .duration(animationTime)
             .call(xAxis2);
-        
+
         svg.select("#deaths-line > g:nth-child(1) > path")
             .datum(updateDataDeath)
             .transition()
@@ -556,12 +573,22 @@ MapAll();
 /*
 // Line graph for Vacc
 function LineForVacc() {
+<<<<<<< HEAD
     var svgVacc = d3.select("#vacc-line"),
         margin = {top: 0, right: 20, bottom: 110, left: 90},
         margin2 = {top: 150, right: 20, bottom: 30, left: 90},
         width = +svgVacc.attr("width") - margin.left - margin.right,
         height = +svgVacc.attr("height") - margin.top - margin.bottom,
         height2 = +svgVacc.attr("height") - margin2.top - margin2.bottom;
+=======
+    const div_width = document.getElementById("main_right_graph").offsetWidth;
+    var svg = d3.select("#vacc-line").attr("width", div_width).attr("height", 350),
+        margin = { top: 20, right: 20, bottom: 110, left: 90 },
+        margin2 = { top: 270, right: 20, bottom: 30, left: 90 },
+        width = +svg.attr("width") - margin.left - margin.right,
+        height = +svg.attr("height") - margin.top - margin.bottom,
+        height2 = +svg.attr("height") - margin2.top - margin2.bottom;
+>>>>>>> b58e926d1e70f195a327bedf7be270cd79afde02
 
     var x = d3.scaleTime().range([0, width]),
         x2 = d3.scaleTime().range([0, width]),
@@ -609,25 +636,26 @@ function LineForVacc() {
         if (error) throw error;
 
         data = d3.nest()
-        .key(function(f) { return f.date;})
-        .rollup(function(f) {
-            return d3.sum(f, function(g) {
-                return g.total_vaccinations; });
-        })
-        .entries(data);
+            .key(function (f) { return f.date; })
+            .rollup(function (f) {
+                return d3.sum(f, function (g) {
+                    return g.total_vaccinations;
+                });
+            })
+            .entries(data);
         // filter out rows with 0 vacc
-        data = data.filter(function(d) {
-            return d.value > 0;});
+        data = data.filter(function (d) {
+            return d.value > 0;
+        });
         //re-name because name changed from nest function
-        data.forEach(function(d) {
+        data.forEach(function (d) {
             d.date = d.key;
             //covert date to Object since keys are Strings in d3
             d.date = new Date(d.date);
             d.total_vaccinations = d.value;
         });
 
-        console.log(data)
-        x.domain(d3.extent(data, function(d) { return d.date; }));
+        x.domain(d3.extent(data, function (d) { return d.date; }));
         y.domain([0, d3.max(data, function (d) { return d.total_vaccinations; })]);
         x2.domain(x.domain());
         y2.domain(y.domain());
@@ -673,6 +701,7 @@ function LineForVacc() {
             .call(zoomVacc);
 
         // Axis labels
+<<<<<<< HEAD
         svgVacc.append("text")             
         .attr("transform",
                 "translate(" + (width/2 + 80) + " ," + 
@@ -687,6 +716,22 @@ function LineForVacc() {
         .attr("dy", "1em")
         .style("text-anchor", "middle")
         .text("Vaccinations"); 
+=======
+        svg.append("text")
+            .attr("transform",
+                "translate(" + (width / 2 + 80) + " ," +
+                (height + margin.top + 40) + ")")
+            .style("text-anchor", "middle")
+            .text("Time");
+
+        svg.append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 0 - margin.left + 90)
+            .attr("x", 0 - (height / 2))
+            .attr("dy", "1em")
+            .style("text-anchor", "middle")
+            .text("Vaccinations");
+>>>>>>> b58e926d1e70f195a327bedf7be270cd79afde02
     });
 
     function brushedVacc() {
