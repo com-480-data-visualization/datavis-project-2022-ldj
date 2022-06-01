@@ -288,12 +288,12 @@ function MapAll() {
 
         // Axis
         focus.append("g")
-            .attr("class", "axis axis--x")
+            .attr("class", "axis--x")
             .attr("transform", "translate(0," + height + ")")
             .call(xAxis);
 
         focus.append("g")
-            .attr("class", "axis axis--y")
+            .attr("class", "axis--y")
             .call(yAxis);
 
         // Line for Death
@@ -308,7 +308,7 @@ function MapAll() {
             .attr("d", line2);
 
         context.append("g")
-            .attr("class", "axis axis--x")
+            .attr("class", "axis--x")
             .attr("transform", "translate(0," + height2 + ")")
             .call(xAxis2);
 
@@ -501,12 +501,12 @@ function MapAll() {
 
         // Axis
         focus_vacc.append("g")
-            .attr("class", "axis axis--x")
+            .attr("class", "axis--x")
             .attr("transform", "translate(0," + height_vacc + ")")
             .call(xAxis_vacc);
 
         focus_vacc.append("g")
-            .attr("class", "axis axis--y")
+            .attr("class", "axis--y")
             .call(yAxis_vacc);
 
         // Line for Vacc
@@ -521,7 +521,7 @@ function MapAll() {
             .attr("d", line2_vacc);
 
         context_vacc.append("g")
-            .attr("class", "axis axis--x")
+            .attr("class", "axis--x")
             .attr("transform", "translate(0," + height2_vacc + ")")
             .call(xAxis2_vacc);
 
