@@ -190,8 +190,9 @@ function MapAll() {
         document.getElementById('vaccButton').onclick = function() {vaccClick()};
     };
 
-    // Line graph for Deaths
+    // Line graphs
     var svg = d3.select("#deaths-line"),
+        svgVacc = d3.select("#vacc-line"),
         margin = {top: 0, right: 20, bottom: 110, left: 70},
         margin2 = {top: 150, right: 20, bottom: 30, left: 70},
         width = +svg.attr("width") - margin.left - margin.right,
@@ -240,6 +241,37 @@ function MapAll() {
         .attr("class", "context")
         .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
 
+    var brushVacc = d3.brushX()
+        .extent([[0, 0], [width, height2]])
+        .on("brush end", brushedVacc);
+
+    var zoomVacc = d3.zoom()
+        .scaleExtent([1, Infinity])
+        .translateExtent([[0, 0], [width, height]])
+        .extent([[0, 0], [width, height]])
+        .on("zoom", zoomedVacc);
+
+    var lineVacc = d3.line()
+        .x(function (d) { return x(d.date); })
+        .y(function (d) { return y(d.total_vaccinations); });
+
+    var line2Vacc = d3.line()
+        .x(function (d) { return x2(d.date); })
+        .y(function (d) { return y2(d.total_vaccinations); });
+
+    var Line_chartVacc = svgVacc.append("g")
+        .attr("class", "focus")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+        // .attr("clip-path", "url(#clip)");
+
+    var focusVacc = svgVacc.append("g")
+        .attr("class", "focus")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    var contextVacc = svgVacc.append("g")
+        .attr("class", "context")
+        .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
+
     function parseDataForAllDeath(data) {
         var dataDeath = d3.nest()
                         .key(function(f) { return f.date;})
@@ -256,6 +288,27 @@ function MapAll() {
             d.deaths = d.value;
         });
         return dataDeath;
+    }
+
+    function parseDataForAllVacc(data) {
+        var dataVacc = d3.nest()
+                        .key(function(f) { return f.date;})
+                        .rollup(function(f) {
+                            return d3.sum(f, function(g) {
+                                return g.total_vaccinations; });
+                        })
+                        .entries(data);
+        // filter out rows with 0 vacc
+        dataVacc = dataVacc.filter(function(d) {
+            return d.value > 0;});
+        //re-name because name changed from nest function
+        dataVacc.forEach(function(d) {
+            d.date = d.key;
+            //covert date to Object since keys are Strings in d3
+            d.date = new Date(d.date);
+            d.total_vaccinations = d.value;
+        });
+        return dataVacc;
     }
 
     d3.csv("../folder/subfolder/out.csv", type, function (error, data) {
@@ -354,6 +407,101 @@ function MapAll() {
         return d;
     }
 
+    d3.csv("../folder/subfolder/out.csv", typeVacc, function (error, data) {
+        if (error) throw error;
+
+        // parse data
+        var dataVacc = structuredClone(data);
+        dataVacc = parseDataForAllVacc(dataVacc);
+
+        x.domain(d3.extent(dataVacc, function(d) { return d.date; }));
+        y.domain([0, d3.max(dataVacc, function (d) { return d.total_vaccinations; })]);
+        x2.domain(x.domain());
+        y2.domain(y.domain());
+
+        // Axis
+        focusVacc.append("g")
+            .attr("class", "axis axis--xVacc")
+            .attr("transform", "translate(0," + height + ")")
+            .call(xAxis);
+
+        focusVacc.append("g")
+            .attr("class", "axis axis--yVacc")
+            .call(yAxis);
+
+        // Line for Vacc
+        Line_chartVacc.append("path")
+            .datum(dataVacc)
+            .attr("class", "mainVacc")
+            .attr("d", lineVacc);
+
+        contextVacc.append("path")
+            .datum(dataVacc)
+            .attr("class", "mainVacc")
+            .attr("d", line2Vacc);
+
+        contextVacc.append("g")
+            .attr("class", "axis axis--xVacc")
+            .attr("transform", "translate(0," + height2 + ")")
+            .call(xAxis2);
+
+        // Brush
+        contextVacc.append("g")
+            .attr("class", "brushVacc")
+            .call(brushVacc)
+            .call(brushVacc.move, x.range());
+
+        // Zoom
+        svgVacc.append("rect")
+            .attr("class", "zoomVacc")
+            .attr("width", width)
+            .attr("height", height)
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+            .call(zoomVacc);
+
+        // Axis labels
+        svgVacc.append("text")             
+        .attr("transform",
+                "translate(" + (width/2 + 80) + " ," + 
+                                (height + margin.top + 40) + ")")
+        .style("text-anchor", "middle")
+        .text("Time");
+
+        svgVacc.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0 - margin.left + 90)
+        .attr("x",0 - (height / 2))
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .text("Vaccinations"); 
+    });
+
+    function brushedVacc() {
+        if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom") return; // ignore brush-by-zoom
+        var s = d3.event.selection || x2.range();
+        x.domain(s.map(x2.invert, x2));
+        Line_chartVacc.select(".mainVacc").attr("d", Line_chartVacc);
+        focusVacc.select(".axis--xVacc").call(xAxis);
+        svgVacc.select(".zoomVacc").call(zoomVacc.transform, d3.zoomIdentity
+            .scale(width / (s[1] - s[0]))
+            .translate(-s[0], 0));
+    }
+
+    function zoomedVacc() {
+        if (d3.event.sourceEvent && d3.event.sourceEvent.type === "brush") return; // ignore zoom-by-brush
+        var t = d3.event.transform;
+        x.domain(t.rescaleX(x2).domain());
+        Line_chartVacc.select(".mainVacc").attr("d", Line_chartVacc);
+        focusVacc.select(".axis--xVacc").call(xAxis);
+        contextVacc.select(".brushVacc").call(brushVacc.move, x.range().map(t.invertX, t));
+    }
+
+    function typeVacc(d) {
+        d.date = parseDate(d.date);
+        d.total_vaccinations = +d.total_vaccinations;
+        return d;
+    }
+
     function updateDeathLine(d, data, centered) {
         var updateDataDeath = structuredClone(data);
 
@@ -405,15 +553,15 @@ function MapAll() {
 }
 MapAll();
 
-
+/*
 // Line graph for Vacc
 function LineForVacc() {
-    var svg = d3.select("#vacc-line"),
+    var svgVacc = d3.select("#vacc-line"),
         margin = {top: 0, right: 20, bottom: 110, left: 90},
         margin2 = {top: 150, right: 20, bottom: 30, left: 90},
-        width = +svg.attr("width") - margin.left - margin.right,
-        height = +svg.attr("height") - margin.top - margin.bottom,
-        height2 = +svg.attr("height") - margin2.top - margin2.bottom;
+        width = +svgVacc.attr("width") - margin.left - margin.right,
+        height = +svgVacc.attr("height") - margin.top - margin.bottom,
+        height2 = +svgVacc.attr("height") - margin2.top - margin2.bottom;
 
     var x = d3.scaleTime().range([0, width]),
         x2 = d3.scaleTime().range([0, width]),
@@ -426,15 +574,15 @@ function LineForVacc() {
         xAxis2 = d3.axisBottom(x2),
         yAxis = d3.axisLeft(y);
 
-    var brush = d3.brushX()
+    var brushVacc = d3.brushX()
         .extent([[0, 0], [width, height2]])
-        .on("brush end", brushed);
+        .on("brush end", brushedVacc);
 
-    var zoom = d3.zoom()
+    var zoomVacc = d3.zoom()
         .scaleExtent([1, Infinity])
         .translateExtent([[0, 0], [width, height]])
         .extent([[0, 0], [width, height]])
-        .on("zoom", zoomed);
+        .on("zoom", zoomedVacc);
 
     var line = d3.line()
         .x(function (d) { return x(d.date); })
@@ -444,20 +592,20 @@ function LineForVacc() {
         .x(function (d) { return x2(d.date); })
         .y(function (d) { return y2(d.total_vaccinations); });
 
-    var Line_chart = svg.append("g")
+    var Line_chart = svgVacc.append("g")
         .attr("class", "focus")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
         .attr("clip-path", "url(#clip)");
 
-    var focus = svg.append("g")
+    var focus = svgVacc.append("g")
         .attr("class", "focus")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    var context = svg.append("g")
+    var context = svgVacc.append("g")
         .attr("class", "context")
         .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
 
-    d3.csv("../folder/subfolder/out.csv", type, function (error, data) {
+    d3.csv("../folder/subfolder/out.csv", typeVacc, function (error, data) {
         if (error) throw error;
 
         data = d3.nest()
@@ -512,27 +660,27 @@ function LineForVacc() {
 
         // Brush
         context.append("g")
-            .attr("class", "brush")
-            .call(brush)
-            .call(brush.move, x.range());
+            .attr("class", "brushVacc")
+            .call(brushVacc)
+            .call(brushVacc.move, x.range());
 
         // Zoom
-        svg.append("rect")
-            .attr("class", "zoom")
+        svgVacc.append("rect")
+            .attr("class", "zoomVacc")
             .attr("width", width)
             .attr("height", height)
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-            .call(zoom);
+            .call(zoomVacc);
 
         // Axis labels
-        svg.append("text")             
+        svgVacc.append("text")             
         .attr("transform",
                 "translate(" + (width/2 + 80) + " ," + 
                                 (height + margin.top + 40) + ")")
         .style("text-anchor", "middle")
         .text("Time");
 
-        svg.append("text")
+        svgVacc.append("text")
         .attr("transform", "rotate(-90)")
         .attr("y", 0 - margin.left + 90)
         .attr("x",0 - (height / 2))
@@ -541,30 +689,31 @@ function LineForVacc() {
         .text("Vaccinations"); 
     });
 
-    function brushed() {
+    function brushedVacc() {
         if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom") return; // ignore brush-by-zoom
         var s = d3.event.selection || x2.range();
         x.domain(s.map(x2.invert, x2));
         Line_chart.select(".mainVacc").attr("d", line);
         focus.select(".axis--x").call(xAxis);
-        svg.select(".zoom").call(zoom.transform, d3.zoomIdentity
+        svg.select(".zoomVacc").call(zoomVacc.transform, d3.zoomIdentity
             .scale(width / (s[1] - s[0]))
             .translate(-s[0], 0));
     }
 
-    function zoomed() {
+    function zoomedVacc() {
         if (d3.event.sourceEvent && d3.event.sourceEvent.type === "brush") return; // ignore zoom-by-brush
         var t = d3.event.transform;
         x.domain(t.rescaleX(x2).domain());
         Line_chart.select(".mainVacc").attr("d", line);
         focus.select(".axis--x").call(xAxis);
-        context.select(".brush").call(brush.move, x.range().map(t.invertX, t));
+        context.select(".brushVacc").call(brushVacc.move, x.range().map(t.invertX, t));
     }
 
-    function type(d) {
+    function typeVacc(d) {
         d.date = parseDate(d.date);
         d.total_vaccinations = +d.total_vaccinations;
         return d;
     }
 }
 LineForVacc();
+*/
