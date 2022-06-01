@@ -58,19 +58,24 @@
 
     <section class="secondsection" id="core-Visualization">
         <div class="box-main">
-            <div class="secondHalf">
+            <div class="secondhalf">
                 <h1 class="text-big">
                     Core Visualization
-                
-                <br><br>
-                <p>
-                <button id="deathButton" onclick="deathClick()">Show Deaths</button>
-                <button id="vaccButton" onclick="vaccClick()">Show Vaccination</button>
-                </h1></p>
-                <svg class="center" id="usamap" width="750" height="500"></svg>
-                <div>
-                    <svg id="deaths-line" width="500" height="230"></svg>
-                    <svg id="vacc-line" width="500" height="230"></svg>
+
+                    <br><br>
+                    <p>
+                        <button id="deathButton" onclick="deathClick()">Show Deaths</button>
+                        <button id="vaccButton" onclick="vaccClick()">Show Vaccination</button>
+                </h1>
+                </p>
+                <svg id="usamap"></svg>
+                <div id="main_visual_div">
+                    <div id="main_left_graph" class="left_graph">
+                        <svg id="deaths-line"></svg>
+                    </div>
+                    <div id="main_right_graph" class="right_graph">
+                        <svg id="vacc-line"></svg>
+                    </div>
                 </div>
             </div>
         </div>
@@ -80,20 +85,24 @@
         <h1 class="text-big" id="additional-Visualization">
             Additional Visual
         </h1>
-        <br>
-        <div id="vaccination_visual">
-            <div id="left_graph">
-                <p class="graph_title">
-                    Weekly Death By Vaccination Status<br></p>
-                <svg id="vaccination_line"></svg>
+        <br><br><br><br><br>
+        <div class="box-main">
+            <div class="secondhalf">
+                <div id="vaccination_visual">
+                    <div id="vaccination_left_graph" class="left_graph">
+                        <p class="graph_title">
+                            Weekly Death By Vaccination Status<br></p>
+                        <svg id="vaccination_line"></svg>
+                    </div>
+                    <div id="vaccination_right_graph" class="right_graph">
+                        <p class="graph_title">
+                            Percentage of Death By Vaccination Status<br></p>
+                        <svg id="vaccination_bar"></svg>
+                    </div>
+                    <script src="../script/vaccinationVisual.js"></script>
+                    <br><br>
+                </div>
             </div>
-            <div id="right_graph">
-                <p class="graph_title">
-                    Percentage of Death By Vaccination Status<br></p>
-                <svg id="vaccination_bar"></svg>
-            </div>
-            <script src="../script/vaccinationVisual.js"></script>
-            <br><br>
         </div>
         <div> State level ranking of deaths <br>
             <button>Stop</button>

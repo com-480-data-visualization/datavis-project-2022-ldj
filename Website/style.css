@@ -79,9 +79,9 @@
     max-width: 80%;
     margin: auto;
     color: black;
-    justify-content: center;
     align-items: center;
     display: flex;
+    flex-direction: column;
 }
 
 .firsthalf {
@@ -96,6 +96,7 @@
     flex-direction: column;
     justify-content: center;
     display: flex;
+    text-align: center;
 }
 
 .text-big {
@@ -142,13 +143,13 @@
     color: white;
 }
 
-#left_graph {
+.left_graph {
     width: 45%;
     float: left;
     margin-left: 30px;
 }
 
-#right_graph {
+.right_graph {
     width: 45%;
     float: right;
     margin-right: 30px;
@@ -229,4 +230,13 @@
 
 #vaccination_bar>g>rect:nth-of-type(3) {
     fill: rgb(0, 102, 29);
+}
+
+#main_visual_div {
+    margin-top: 20px;
+}
+
+#usamap {
+    margin: 0 auto;
+    display: block;
 }
