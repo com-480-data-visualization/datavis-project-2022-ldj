@@ -321,4 +321,4 @@ function vaccinationVisual() {
     }
 }
 
-setTimeout(vaccinationVisual, 5000);
+setTimeout(vaccinationVisual, 500);

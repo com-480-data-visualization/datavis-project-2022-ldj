@@ -655,7 +655,7 @@ function MapAll() {
             .attr("d", line2_vacc);
     }
 }
-setTimeout(MapAll, 5000);
+setTimeout(MapAll, 500);
 
 // // Line graph for Vacc
 // function LineForVacc() {
