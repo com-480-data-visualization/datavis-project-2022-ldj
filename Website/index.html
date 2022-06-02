@@ -71,9 +71,13 @@
                 <svg id="usamap"></svg>
                 <div id="main_visual_div">
                     <div id="main_left_graph" class="left_graph">
+                        <p id="main_left_title" class="graph_title">
+                            Total Deaths in the US over Time<br></p>
                         <svg id="deaths-line"></svg>
                     </div>
                     <div id="main_right_graph" class="right_graph">
+                        <p id="main_right_title" class="graph_title">
+                            Total Vaccinations in the US over Time<br></p>
                         <svg id="vacc-line"></svg>
                     </div>
                 </div>
@@ -109,7 +113,11 @@
             <h1 class="text-big" id="State Ranking of Covid Deaths">
                 State Ranking of Covid Deaths
             </h1>
-            <br><br><br><br><br>
+            <br><br><br>
+            <div style="text-align: center; ">
+                <button id="rankButton">Start</button>
+            </div>
+            <br><br>
             <div id= "chart">
                  <script src="data_ranking.js"></script>            
                  <script src="barchartrace.js"></script>
