@@ -307,7 +307,7 @@ function MapAll() {
             .selectAll("text")
             .attr("transform", "translate(-5,0)rotate(-30)")
             .style("text-anchor", "end")
-            .style("font-size", "12");
+            .style("font-size", "13");
 
         focus.append("g")
             .attr("class", "axis--y")
@@ -315,7 +315,7 @@ function MapAll() {
             .attr("class", "white")
             .selectAll("text")
             .style("text-anchor", "end")
-            .style("font-size", "12");
+            .style("font-size", "13");
 
         // Line for Death
         Line_chart.append("path")
@@ -335,7 +335,7 @@ function MapAll() {
             .call(xAxis2).selectAll("text")
             .attr("transform", "translate(-5,0)rotate(-30)")
             .style("text-anchor", "end")
-            .style("font-size", "12");
+            .style("font-size", "13");
 
         // Brush
         context.append("g")
@@ -384,7 +384,7 @@ function MapAll() {
             .selectAll("text")
             .attr("transform", "translate(-5,0)rotate(-30)")
             .style("text-anchor", "end")
-            .style("font-size", "12");
+            .style("font-size", "13");
         svg.select(".zoom").call(zoom.transform, d3.zoomIdentity
             .scale(width / (s[1] - s[0]))
             .translate(-s[0], 0));
@@ -398,7 +398,7 @@ function MapAll() {
         focus.select(".axis--x").call(xAxis).selectAll("text")
             .attr("transform", "translate(-5,0)rotate(-30)")
             .style("text-anchor", "end")
-            .style("font-size", "12");
+            .style("font-size", "13");
         context.select(".brush").call(brush.move, x.range().map(t.invertX, t));
     }
 
@@ -430,29 +430,29 @@ function MapAll() {
 
         var svg = d3.select("#deaths-line");
 
-        svg.select("#deaths-line > g:nth-child(2) > g.axis--x")
+        svg.select("#deaths-line > g:nth-child(2) > g:nth-child(1)")
             .transition()
             .duration(animationTime)
             .call(xAxis).selectAll("text")
             .attr("transform", "translate(-5,0)rotate(-30)")
             .style("text-anchor", "end")
-            .style("font-size", "12");
+            .style("font-size", "13");
 
-        svg.select("#deaths-line > g:nth-child(2) > g.axis--y")
+        svg.select("#deaths-line > g:nth-child(2) > g:nth-child(2)")
             .transition()
             .duration(animationTime)
             .call(yAxis)
             .selectAll("text")
             .style("text-anchor", "end")
-            .style("font-size", "12");
+            .style("font-size", "13");
 
-        svg.select("#deaths-line > g.context >g.axis--x")
+        svg.select("#deaths-line > g.context > g.white")
             .transition()
             .duration(animationTime)
             .call(xAxis2).selectAll("text")
             .attr("transform", "translate(-5,0)rotate(-30)")
             .style("text-anchor", "end")
-            .style("font-size", "12");
+            .style("font-size", "13");
 
         svg.select("#deaths-line > g:nth-child(1) > path")
             .datum(updateDataDeath)
@@ -538,7 +538,7 @@ function MapAll() {
             .selectAll("text")
             .attr("transform", "translate(-5,0)rotate(-30)")
             .style("text-anchor", "end")
-            .style("font-size", "12");
+            .style("font-size", "13");
 
         focus_vacc.append("g")
             .attr("class", "axis--y")
@@ -546,7 +546,7 @@ function MapAll() {
             .call(yAxis_vacc)
             .selectAll("text")
             .style("text-anchor", "end")
-            .style("font-size", "12");
+            .style("font-size", "13");
 
         // Line for Vacc
         Line_chart_vacc.append("path")
@@ -567,7 +567,7 @@ function MapAll() {
             .selectAll("text")
             .attr("transform", "translate(-5,0)rotate(-30)")
             .style("text-anchor", "end")
-            .style("font-size", "12");
+            .style("font-size", "13");
 
         // Brush
         context_vacc.append("g")
@@ -614,7 +614,7 @@ function MapAll() {
         focus_vacc.select(".axis--x").call(xAxis_vacc).selectAll("text")
             .attr("transform", "translate(-5,0)rotate(-30)")
             .style("text-anchor", "end")
-            .style("font-size", "12");
+            .style("font-size", "13");
         svg_vacc.select(".zoom").call(zoom_vacc.transform, d3.zoomIdentity
             .scale(width_vacc / (s[1] - s[0]))
             .translate(-s[0], 0));
@@ -628,7 +628,7 @@ function MapAll() {
         focus_vacc.select(".axis--x").call(xAxis_vacc).selectAll("text")
             .attr("transform", "translate(-5,0)rotate(-30)")
             .style("text-anchor", "end")
-            .style("font-size", "12");
+            .style("font-size", "13");
         context_vacc.select(".brush").call(brush_vacc.move, x_vacc.range().map(t.invertX, t));
     }
 
@@ -683,31 +683,31 @@ function MapAll() {
 
         var svg = d3.select("#vacc-line");
 
-        svg.select("#vacc-line > g:nth-child(2) > g.axis--x")
+        svg.select("#vacc-line > g:nth-child(2) > g:nth-child(1)")
             .transition()
             .duration(animationTime)
             .call(xAxis_vacc)
             .selectAll("text")
             .attr("transform", "translate(-5,0)rotate(-30)")
             .style("text-anchor", "end")
-            .style("font-size", "12");
+            .style("font-size", "13");
 
-        svg.select("#vacc-line > g:nth-child(2) > g.axis--y")
+        svg.select("#vacc-line > g:nth-child(2) > g:nth-child(2)")
             .transition()
             .duration(animationTime)
             .call(yAxis_vacc)
             .selectAll("text")
             .style("text-anchor", "end")
-            .style("font-size", "12");
+            .style("font-size", "13");
 
-        svg.select("#vacc-line > g.context > g.axis--x")
+        svg.select("#vacc-line > g.context > g.white")
             .transition()
             .duration(animationTime)
             .call(xAxis2_vacc)
             .selectAll("text")
             .attr("transform", "translate(-5,0)rotate(-30)")
             .style("text-anchor", "end")
-            .style("font-size", "12");
+            .style("font-size", "13");
 
         svg.select("#vacc-line > g:nth-child(1) > path")
             .datum(updateDataVacc)
