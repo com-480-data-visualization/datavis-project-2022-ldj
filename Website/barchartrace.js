@@ -3,7 +3,7 @@ const width = 1200, height = 600, margin = { top: 20, bottom: 0, left: 100, righ
 const chartWidth = width - (margin.left + margin.right), chartHeight = height - (margin.top + margin.bottom);
 const data = [];
 const count = 10;
-const duration = 1000;
+const duration = 3000;
 const barPadding = 20;
 const barHeight = (chartHeight - (barPadding * count)) / count;
 const getDate = () => dataOri[0][dateIndex];
@@ -165,7 +165,14 @@ const renderChart = () => {
     })
     .remove();
 }
-
+// random color
+function randomRgbColor() {
+  const r = Math.floor(Math.random() * 256);
+  const g = Math.floor(Math.random() * 256);
+  const b = Math.floor(Math.random() * 256);
+  return `rgb(${r},${g},${b})`;
+}
+// create ticker
 function createTicker() {
   const ticker = d3.interval(() => {
     if (dateIndex < dataOri[0].length - 1) {
@@ -193,12 +200,14 @@ const init = () => {
   renderChart(); // render chart
   createTicker(); // create tiker
 }
-
+    
 init();
+    
 
-function randomRgbColor() {
-  const r = Math.floor(Math.random() * 256);
-  const g = Math.floor(Math.random() * 256);
-  const b = Math.floor(Math.random() * 256);
-  return `rgb(${r},${g},${b})`;
-}
+
+
+
+
+
+
+ 
