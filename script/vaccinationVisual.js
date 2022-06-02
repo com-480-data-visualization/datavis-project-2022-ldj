@@ -4,7 +4,6 @@ function vaccinationVisual() {
     // ********************** CODE FOR LINE GRAPH **********************************
 
     const div_width = document.getElementById("vaccination_left_graph").offsetWidth;
-    console.log("div_width is: " + div_width);
     var svg = d3.select("#vaccination_line").attr("width", div_width).attr("height", 500),
         margin = { top: 20, right: 20, bottom: 110, left: 40 },
         margin2 = { top: 420, right: 20, bottom: 30, left: 40 },
@@ -27,7 +26,7 @@ function vaccinationVisual() {
 
     var parseDate = d3.timeParse("%Y%V");
 
-    var xAxis = d3.axisBottom(x),
+    var xAxis = d3.axisBottom(x).ticks(7),
         xAxis2 = d3.axisBottom(x_bot),
         yAxis = d3.axisLeft(y);
 
@@ -44,27 +43,33 @@ function vaccinationVisual() {
     // lines for the graph
     var line_unvaxed_top = d3.line()
         .x(d => x(d.mmwr_week))
-        .y(d => y(d.unvaccinated_with_outcome));
+        .y(d => y(d.unvaccinated_with_outcome))
+        .curve(d3.curveBasis);
 
     var line_unvaxed_bottom = d3.line()
         .x(d => x_bot(d.mmwr_week))
-        .y(d => y_bot(d.unvaccinated_with_outcome));
+        .y(d => y_bot(d.unvaccinated_with_outcome))
+        .curve(d3.curveBasis);
 
     var line_primary_series_only_top = d3.line()
         .x(d => x(d.mmwr_week))
-        .y(d => y(d.primary_series_only_with_outcome));
+        .y(d => y(d.primary_series_only_with_outcome))
+        .curve(d3.curveBasis);
 
     var line_primary_series_only_bottom = d3.line()
         .x(d => x_bot(d.mmwr_week))
-        .y(d => y_bot(d.primary_series_only_with_outcome));
+        .y(d => y_bot(d.primary_series_only_with_outcome))
+        .curve(d3.curveBasis);
 
     var line_boosted_top = d3.line()
         .x(d => x(d.mmwr_week))
-        .y(d => y(d.boosted_with_outcome));
+        .y(d => y(d.boosted_with_outcome))
+        .curve(d3.curveBasis);
 
     var line_boosted_bottom = d3.line()
         .x(d => x_bot(d.mmwr_week))
-        .y(d => y_bot(d.boosted_with_outcome));
+        .y(d => y_bot(d.boosted_with_outcome))
+        .curve(d3.curveBasis);
 
     svg.append("defs").append("clipPath")
         .attr("id", "clip")
@@ -219,11 +224,15 @@ function vaccinationVisual() {
             .attr("class", "vaccination_axis--x")
             .call(d3.axisBottom(x_bar))
             .selectAll("text")
-            .style("text-anchor", "middle");
+            .style("text-anchor", "middle")
+            .style("font-size", 15);
 
         bar_graph.append("g")
             .attr("class", "vaccination_axis--y")
-            .call(d3.axisLeft(y_bar).tickFormat(d3.format(".0%")));
+            .call(d3.axisLeft(y_bar).tickFormat(d3.format(".0%")))
+            .selectAll("text")
+            .style("text-anchor", "left")
+            .style("font-size", 13);
 
         // draw the bars
         bar_graph.selectAll("bars")

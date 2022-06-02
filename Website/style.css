@@ -81,7 +81,7 @@
 
 .box-main {
     height: 80%;
-    max-width: 80%;
+    max-width: 95%;
     margin: auto;
     color: black;
     align-items: center;
@@ -149,15 +149,13 @@
 }
 
 .left_graph {
-    width: 45%;
+    width: 48%;
     float: left;
-    margin-left: 30px;
 }
 
 .right_graph {
-    width: 45%;
+    width: 48%;
     float: right;
-    margin-right: 30px;
 }
 
 .line {
@@ -167,13 +165,13 @@
 }
 
 .mainDeath {
-    stroke-width: 1.5;
+    stroke-width: 2.5;
     fill: none;
     stroke: rgb(188, 33, 33);
 }
 
 .mainVacc {
-    stroke-width: 1.5;
+    stroke-width: 2.5;
     fill: none;
     stroke: rgb(56, 184, 107);
 }
@@ -199,7 +197,7 @@
 .graph_title {
     font-family: 'Piazzolla', serif;
     font-weight: bold;
-    font-size: 20px;
+    font-size: 25px;
     text-align: center;
 }
 .zoom {
