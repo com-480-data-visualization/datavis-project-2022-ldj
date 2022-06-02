@@ -542,9 +542,9 @@ function MapAll() {
 
         focus_vacc.append("g")
             .attr("class", "axis--y")
+            .attr("class", "white")
             .call(yAxis_vacc)
             .selectAll("text")
-            .attr("class", "white")
             .style("text-anchor", "end")
             .style("font-size", "12");
 
