@@ -6,7 +6,7 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>LDJ</title>
+    <title>COVID DASHBOARD</title>
 
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -26,22 +26,18 @@
     <div class="w3-top">
         <div class="w3-bar w3-black w3-card">
         <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
-        <a href="#" class="w3-bar-item w3-button w3-padding-large">LDJ</a>
+        <a href="#" class="w3-bar-item w3-button w3-padding-large">Home</a>
         <!--a href="#band" *** -->
-        <a href="#about" class="w3-bar-item w3-button w3-padding-large w3-hide-small">ABOUT US</a>
-        <a href="#core" class="w3-bar-item w3-button w3-padding-large w3-hide-small">MAP AND LINE</a>
-        <a href="#add" class="w3-bar-item w3-button w3-padding-large w3-hide-small">ADD</a>
-        <a href="#more" class="w3-bar-item w3-button w3-padding-large w3-hide-small">MORE</a>
-        <a href="#contact" class="w3-bar-item w3-button w3-padding-large w3-hide-small">CONTACT</a>
+        <a href="#about" class="w3-bar-item w3-button w3-padding-large w3-hide-small">About us</a>
+        <a href="#core" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Visualizations</a>
+        <a href="#contact" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Contact</a>
         </div>
     </div>
 
     <!-- Navbar on small screens (remove the onclick attribute if you want the navbar to always show on top of the content when clicking on the links) -->
     <div id="smallversion" class="w3-bar-block w3-black w3-hide w3-hide-large w3-hide-medium w3-top" style="margin-top:46px">
         <a href="#about" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()">About Us</a>
-        <a href="#core" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()">Map and Line</a>
-        <a href="#add" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()">Add</a>
-        <a href="#more" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()">More</a>
+        <a href="#core" class="w3-bar-item w3-button w3-padding-large" onclick="myFunction()">Visualizations</a>
     </div>
 
     <!-- Page content -->
@@ -99,8 +95,8 @@
         <!-- The Core Vistual Section -->
         <div class="w3-black" id="core">
             <div class="w3-container w3-content w3-padding-64" style="max-width:800px">
-                <h2 class="w3-wide w3-center">Map and Line</h2>
-                <p class="w3-opacity w3-center"><i>Vistualize Death Number and Vaccination Number</i>
+                <h2 class="w3-wide w3-center">Visualizations</h2>
+                <p class="w3-opacity w3-center"><i>US Death Number and Vaccination Number</i>
                     <br><br>
                     <button id="deathButton" onclick="deathClick()">Show Deaths</button>
                     <button id="vaccButton" onclick="vaccClick()">Show Vaccination</button>
@@ -121,7 +117,7 @@
         
         <!-- The Additional Section -->
         <div class="w3-container w3-content w3-center w3-padding-64" style="max-width:800px" id="add">
-            <h2 class="w3-wide">Additional Visual</h2>
+            <h2 class="w3-wide">Death by Vaccination Status</h2>
             <p class="w3-opacity"><i>Death and Vaccination Relation</i></p>
             <div id="vaccination_visual">
                 <div id="vaccination_left_graph" class="left_graph">
@@ -140,10 +136,11 @@
         </div>
 
         <!-- The More Vistual Section -->
-        <div class="w3-black" id="more">
-            <div class="w3-container w3-content w3-padding-64" style="max-width:800px">
-                <h2 class="w3-wide w3-center">More</h2>
-                <p class="w3-opacity w3-center"><i>More</i></p>
+        <div class="w3-light-grey" id="more">
+            <div class="w3-container w3-content w3-padding-64" style="max-width:1200px">
+                <h2 class="w3-wide w3-center">State Level Death Toll</h2>
+                <p class="w3-opacity w3-center"><i>state ranking per month</i></p>
+
                 <div id= "chart">
                     <script src="data_ranking.js"></script>            
                     <script src="barchartrace.js"></script>
@@ -159,6 +156,7 @@
             <div class="w3-col m6 w3-large w3-margin-bottom">
                 <i class="fa fa-map-marker" style="width:30px"></i> Lausanne, Switzerland<br>
                 <i class="fa fa-envelope" style="width:30px"> </i> Email: mail@mail.com<br>
+                <i class="fa fa-male" style="width:30px"></i> Contributed by LDJ Group<br>
             </div>
             <div class="w3-col m6">
                 <form action="/action_page.php" target="_blank">

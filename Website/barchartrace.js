@@ -1,9 +1,9 @@
 // console.log(dataOri);
-const width = 1200, height = 600, margin = { top: 20, bottom: 0, left: 110, right: 100 };
+const width = 1200, height = 600, margin = { top: 20, bottom: 0, left: 100, right: 100 };
 const chartWidth = width - (margin.left + margin.right), chartHeight = height - (margin.top + margin.bottom);
 const data = [];
 const count = 10;
-const duration = 500;
+const duration = 1000;
 const barPadding = 20;
 const barHeight = (chartHeight - (barPadding * count)) / count;
 const getDate = () => dataOri[0][dateIndex];
