@@ -3,6 +3,10 @@
     padding: 0;
 }
 
+body {font-family: "Lato", sans-serif}
+
+.mySlides {display: none}
+
 .navbar {
     display: flex;
     position: sticky;
@@ -244,4 +248,10 @@
 #usamap {
     margin: 0 auto;
     display: block;
+}
+
+.white {
+    fill: white;
+    stroke: white;
+    stroke-width: 0.5px;
 }

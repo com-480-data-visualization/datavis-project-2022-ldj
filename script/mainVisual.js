@@ -111,7 +111,7 @@ function MapAll() {
             })
             .attr("text-anchor", "middle")
             .style("font", "8px times")
-            .attr("fill", "grey")
+            .attr("fill", "white")
 
 
         function clicked(d) {
@@ -166,6 +166,7 @@ function MapAll() {
             svg_choropleth.append("g")
                 .attr("transform", "translate(0,20)").attr("class", "legend")
                 .style("font", "8px times")
+                .attr("fill", "white")
                 .call(colorLegend);
         }
 
@@ -289,11 +290,13 @@ function MapAll() {
         // Axis
         focus.append("g")
             .attr("class", "axis--x")
+            .attr("class", "white")
             .attr("transform", "translate(0," + height + ")")
             .call(xAxis);
 
         focus.append("g")
             .attr("class", "axis--y")
+            .attr("class", "white")
             .call(yAxis);
 
         // Line for Death
@@ -309,6 +312,7 @@ function MapAll() {
 
         context.append("g")
             .attr("class", "axis--x")
+            .attr("class", "white")
             .attr("transform", "translate(0," + height2 + ")")
             .call(xAxis2);
 
@@ -332,6 +336,7 @@ function MapAll() {
                 "translate(" + (width / 2 + 70) + " ," +
                 (height + margin.top + 40) + ")")
             .style("text-anchor", "middle")
+            .attr("fill", "white")
             .text("Time");
 
         svg.append("text")
@@ -340,6 +345,7 @@ function MapAll() {
             .attr("x", 0 - (height / 2))
             .attr("dy", "1em")
             .style("text-anchor", "middle")
+            .attr("fill", "white")
             .text("Deaths");
 
     });
@@ -474,25 +480,6 @@ function MapAll() {
     d3.csv("../folder/subfolder/out.csv", type_vacc, function (error, data) {
         if (error) throw error;
 
-        // data = d3.nest()
-        //     .key(function (f) { return f.date; })
-        //     .rollup(function (f) {
-        //         return d3.sum(f, function (g) {
-        //             return g.total_vaccinations;
-        //         });
-        //     })
-        //     .entries(data);
-        // // filter out rows with 0 vacc
-        // data = data.filter(function (d, i, arr) {
-        //     return d.value > 0 && d.value > arr[i-1].value;
-        // });
-        // //re-name because name changed from nest function
-        // data.forEach(function (d) {
-        //     d.date = d.key;
-        //     //covert date to Object since keys are Strings in d3
-        //     d.date = new Date(d.date);
-        //     d.total_vaccinations = d.value;
-        // });
         data = parseDataForAllVacc(data);
         x_vacc.domain(d3.extent(data, function (d) { return d.date; }));
         y_vacc.domain([0, d3.max(data, function (d) { return d.total_vaccinations; })]);
@@ -502,11 +489,13 @@ function MapAll() {
         // Axis
         focus_vacc.append("g")
             .attr("class", "axis--x")
+            .attr("class", "white")
             .attr("transform", "translate(0," + height_vacc + ")")
             .call(xAxis_vacc);
 
         focus_vacc.append("g")
             .attr("class", "axis--y")
+            .attr("class", "white")
             .call(yAxis_vacc);
 
         // Line for Vacc
@@ -522,6 +511,7 @@ function MapAll() {
 
         context_vacc.append("g")
             .attr("class", "axis--x")
+            .attr("class", "white")
             .attr("transform", "translate(0," + height2_vacc + ")")
             .call(xAxis2_vacc);
 
@@ -545,6 +535,7 @@ function MapAll() {
                 "translate(" + (width_vacc / 2 + 80) + " ," +
                 (height_vacc + margin_vacc.top + 40) + ")")
             .style("text-anchor", "middle")
+            .attr("fill", "white")
             .text("Time");
 
         svg_vacc.append("text")
@@ -553,6 +544,7 @@ function MapAll() {
             .attr("x", 0 - (height_vacc / 2))
             .attr("dy", "1em")
             .style("text-anchor", "middle")
+            .attr("fill", "white")
             .text("Vaccinations");
     });
 
