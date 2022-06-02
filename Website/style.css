@@ -3,9 +3,13 @@
     padding: 0;
 }
 
-body {font-family: "Lato", sans-serif}
+body {
+    font-family: "Lato", sans-serif
+}
 
-.mySlides {display: none}
+.mySlides {
+    display: none
+}
 
 .navbar {
     display: flex;
@@ -121,7 +125,7 @@ body {font-family: "Lato", sans-serif}
     width: 90%;
 }
 
-.text-small > svg {
+.text-small>svg {
     margin: 10px;
     padding: 20px;
 }
@@ -201,9 +205,10 @@ body {font-family: "Lato", sans-serif}
 .graph_title {
     font-family: 'Piazzolla', serif;
     font-weight: bold;
-    font-size: 25px;
+    font-size: 20px;
     text-align: center;
 }
+
 .zoom {
     cursor: move;
     fill: none;
@@ -213,13 +218,13 @@ body {font-family: "Lato", sans-serif}
 .vaccination_axis--x {
     font-family: 'Piazzolla', serif;
     font-size: 15px;
-    text-align: center; 
+    text-align: center;
 }
 
 .vaccination_axis--y {
     font-family: 'Piazzolla', serif;
     font-size: 13px;
-    text-align: center; 
+    text-align: center;
 }
 
 #vaccination_visual {
@@ -252,4 +257,46 @@ body {font-family: "Lato", sans-serif}
     fill: white;
     stroke: white;
     stroke-width: 0.5px;
+}
+
+.cool_button {
+    border-radius: 40px;
+    box-sizing: border-box;
+    display: inline-block;
+    height: 50px;
+    font-size: 15px;
+    padding: 4px;
+    position: relative;
+    text-decoration: none;
+    width: 200px;
+    z-index: 2;
+}
+
+.cool_button_red {
+    background-image: linear-gradient(to right, #ffd6d6 0%, #ff4747 100%);
+    color: #ffa4a4;
+}
+
+.cool_button_green {
+    background-image: linear-gradient(to right, #C5E8B7 0%, #2EB62C 100%);
+    color: #8ff98e;
+}
+
+.cool_button:hover {
+    color: #fff;
+}
+
+.cool_button_span {
+    align-items: center;
+    background: #0e0e10;
+    border-radius: 40px;
+    display: flex;
+    justify-content: center;
+    height: 100%;
+    transition: background 0.5s ease;
+    width: 100%;
+}
+
+.cool_button:hover .cool_button_span {
+    background: transparent;
 }
