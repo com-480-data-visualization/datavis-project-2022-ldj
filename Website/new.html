@@ -162,7 +162,7 @@
                         document.addEventListener("DOMContentLoaded", function (event) {
                             var scrollpos = sessionStorage.getItem('scrollpos');
                             if (scrollpos) {
-                                setTimeout(window.scrollTo(0, scrollpos), 1000);
+                                window.scrollTo(0, scrollpos - 400);
                                 sessionStorage.removeItem('scrollpos');
                             }
                         });
