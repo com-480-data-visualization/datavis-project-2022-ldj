@@ -158,6 +158,19 @@
                 <div id="rankButton" class="cool_button cool_button_white" onclick="document.location.reload();"><span class="cool_button_span">Start</span></div><br>
                 <br><br>
                 <div id="chart">
+                    <script>
+                        document.addEventListener("DOMContentLoaded", function (event) {
+                            var scrollpos = sessionStorage.getItem('scrollpos');
+                            if (scrollpos) {
+                                window.scrollTo(0, scrollpos);
+                                sessionStorage.removeItem('scrollpos');
+                            }
+                        });
+                    
+                        window.addEventListener("beforeunload", function (e) {
+                            sessionStorage.setItem('scrollpos', window.scrollY);
+                        });
+                    </script>
                     <script src="data_ranking.js"></script>
                     <script src="barchartrace.js"></script>
                 </div>
