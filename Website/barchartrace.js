@@ -165,7 +165,14 @@ const renderChart = () => {
     })
     .remove();
 }
-
+// random color
+function randomRgbColor() {
+  const r = Math.floor(Math.random() * 256);
+  const g = Math.floor(Math.random() * 256);
+  const b = Math.floor(Math.random() * 256);
+  return `rgb(${r},${g},${b})`;
+}
+// create ticker
 function createTicker() {
   const ticker = d3.interval(() => {
     if (dateIndex < dataOri[0].length - 1) {
@@ -199,10 +206,12 @@ document.getElementById("rankButton").onclick = () => {
 };
 
 init();
+    
 
-function randomRgbColor() {
-  const r = Math.floor(Math.random() * 256);
-  const g = Math.floor(Math.random() * 256);
-  const b = Math.floor(Math.random() * 256);
-  return `rgb(${r},${g},${b})`;
-}
+
+
+
+
+
+
+ 
