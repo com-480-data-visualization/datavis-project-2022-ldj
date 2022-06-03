@@ -201,9 +201,9 @@ const init = () => {
   createTicker(); // create tiker
 }
 
-document.getElementById("rankButton").onclick = () => {
-  document.location.reload(true);
-};
+// document.getElementById("rankButton").onclick = () => {
+//   document.location.reload();
+// };
 
 init();
     
