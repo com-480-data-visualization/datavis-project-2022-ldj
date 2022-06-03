@@ -202,7 +202,7 @@ const init = () => {
 }
 
 document.getElementById("rankButton").onclick = () => {
-  window.location.reload();
+  document.location.reload(true);
 };
 
 init();
