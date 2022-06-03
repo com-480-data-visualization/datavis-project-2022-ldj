@@ -194,6 +194,10 @@ const init = () => {
   createTicker(); // create tiker
 }
 
+document.getElementById("rankButton").onclick = () => {
+  window.location.reload();
+};
+
 init();
 
 function randomRgbColor() {

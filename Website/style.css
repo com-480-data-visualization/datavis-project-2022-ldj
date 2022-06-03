@@ -269,7 +269,6 @@ body {
     position: relative;
     text-decoration: none;
     width: 200px;
-    z-index: 2;
 }
 
 .cool_button_red {
@@ -280,6 +279,11 @@ body {
 .cool_button_green {
     background-image: linear-gradient(to right, #C5E8B7 0%, #2EB62C 100%);
     color: #8ff98e;
+}
+
+.cool_button_white {
+    background-image: linear-gradient(to right, #737373 0%, darkgrey 100%);
+    color: rgb(231, 229, 229);
 }
 
 .cool_button:hover {
